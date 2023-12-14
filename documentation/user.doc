@@ -1,0 +1,25 @@
+User Service
+
+*update
+    types:
+        to update email:
+            requirements:
+                nickname
+                password
+                surname
+
+        to update password:
+            requirements:
+                nickname
+                email
+                surname
+
+        to update nickname:
+            condition:
+                nickname no exists 
+            requirements:
+                nickname
+                email
+                surname
+                password
+

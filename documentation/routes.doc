@@ -1,0 +1,13 @@
+* Get
+    /users
+    /users/:nickname
+    /users/login?type=(email or nickname)
+
+* Post
+    /users/register
+
+* Patch
+    /users/update?type=(email or password or nickname or )
+
+* Delete
+    /users/delete
