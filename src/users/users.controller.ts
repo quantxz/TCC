@@ -69,4 +69,14 @@ export class UsersController {
       returnedData: exUser,
     });
   }
+
+  // @Get('test')
+  // async redisTest(@Res() res: Response) {
+  //   const cacheUser = await this.userService.getAllRedis()
+
+  //   return res.status(200).json({
+  //     message: "user deleted",
+  //     returnedData: cacheUser,
+  //   });
+  // }
 }

@@ -1,5 +1,0 @@
-*Erros:
-    # tipar os erros(email ja existe, nickname ja existe, etc)
-    # refatorar os controlers e os services para tratar os erros usando try/catch
-
-* Funcionalidades   

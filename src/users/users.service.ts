@@ -3,10 +3,11 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { PrismaService } from 'src/services/prisma.service';
 import { UserDto } from './dto/user.dto';
+// import { RedisService } from 'src/services/redis.service';
 
 @Injectable()
 export class UserService {
-  constructor(private readonly prismaService: PrismaService) {}
+  constructor(private readonly prismaService: PrismaService, /*private readonly redisService: RedisService*/) {}
 
   async create(createUserDto: CreateUserDto) {
     const user: CreateUserDto = await this.prismaService.user.create({
@@ -138,4 +139,18 @@ export class UserService {
 
     return exUser
   }
+
+  // async getAllRedis() {
+  //   const cacheUser = await this.redisService.get("")
+
+  //   await this.redisService.set('user', JSON.stringify(cacheUser))
+
+  //   if(!cacheUser) {
+  //     const users: UserDto[] = await this.prismaService.user.findMany() 
+      
+  //     return users
+  //   }
+
+  //   return JSON.parse(cacheUser)
+  // }
 }
