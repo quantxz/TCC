@@ -3,7 +3,8 @@
     # refatorar os controlers e os services para tratar os erros usando try/catch
     
 # Funcionalidades   
-    # arrumar o websocket e testar a api no frontend
+    # criar o sistema de salas e testar a api no frontend
     # dividir o register em verified e standart 
-    # terminar e testar o sistema de login usando o redis
-    # arrumar 
+    # terminar e testar o sistema de login usando o redis 
+    # terminar o sistema de sala do chat que até o momento não esta enviando as mensagens
+    # criar o sistema de seleção de grupos no frontend

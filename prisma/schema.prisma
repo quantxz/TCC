@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -11,15 +8,37 @@ datasource db {
 }
 
 model User {
-  id        String  @default(uuid()) @id
+  id        String    @default(uuid()) @id
   name      String  
   surname   String
-  email     String  @unique
+  email     String    @unique
   password  String
-  nickname  String  @unique
+  nickname  String    @unique
 
-  cpf       String?  @unique
-  rg        String?  @unique
-  @@map("user")
+  messages  Messages[]
+  cpf       String?   @unique
+  rg        String?   @unique
+
+  @@map("users") // Use a forma no plural para refletir a tabela real no banco de dados
 }
 
+model ChatRoom {
+  id          String   @default(uuid()) @id 
+  name        String   @unique 
+  
+  messages    Messages[]
+
+  @@map("chat_rooms") // Use underscore_case para refletir a tabela real no banco de dados
+}
+
+model Messages {
+  id            String      @default(uuid()) @id
+  author        String      @unique
+  content       String
+  room          String
+
+  roomSended    ChatRoom    @relation(fields: [room], references: [name])
+  creator       User        @relation(fields: [author], references: [nickname])
+  
+  @@map("messages")
+}
