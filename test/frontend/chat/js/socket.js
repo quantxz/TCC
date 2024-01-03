@@ -1,19 +1,15 @@
-const socket = io("http://localhost:3000");
+
 const button = document.querySelector(".submit")
 
 
 button.addEventListener("click", (e) => {
     e.preventDefault()
     const input = document.querySelector(".messageContent")
-    
-    socket.emit("select_room", {
-        user: "Anderson",
-        room: "room"
-    });
 
     socket.emit("message", {
         user: "Anderson",
-        room: "room"
+        room: "room",
+        payload: "hello World"
     })
 })
 

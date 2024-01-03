@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <ul class="UL">
+        <li><a href="./chat.html"></a></li>
+        <li><a href="./chat.html"></a></li>
+        <li><a href="./chat.html"></a></li>
+        <li><a href="./chat.html"></a></li>
+        <li><a href="./chat.html"></a></li>
+        <li><a href="./chat.html"></a></li>
+        <li><a href="./chat.html"></a></li>
+        <li><a href="./chat.html"></a></li>
+        <li><a href="./chat.html"></a></li>
+        <li><a href="./chat.html"></a></li>
+    </ul>
+    <script src="https://cdn.socket.io/4.7.2/socket.io.min.js" integrity="sha384-mZLF4UVrpi/QTWPA7BjNPEnkIfRFn4ZEO3Qt/HFklTJBj/gBOV8G3HcKn4NfQblz" crossorigin="anonymous"></script>
+    <script src="./js/io.js"></script>
+    <script>
+        function emit(room) {
+            socket.emit("select_room", {
+                user: "Anderson",
+                room: room
+            });
+        }
+
+        socket.on("message", content => {
+            console.log(content)
+        })
+    </script>
+    <script>
+        const undefinedList = document.querySelector(".UL");
+        const [...list] = undefinedList.children
+        let i = 0
+        for(let children of list) {
+            children["children"][0].append(`room ${i}`);
+            children["children"][0].className = `room${i}`
+            children["children"][0].addEventListener('click', () => emit(children["children"][0].className))
+            i++;
+        }
+    </script>
+</body>
+</html>

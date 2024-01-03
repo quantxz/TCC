@@ -8,3 +8,4 @@
     # terminar e testar o sistema de login usando o redis 
     # terminar o sistema de sala do chat que até o momento não esta enviando as mensagens
     # criar o sistema de seleção de grupos no frontend
+    arrumar o select_room

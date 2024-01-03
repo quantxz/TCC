@@ -1,30 +1,5 @@
-# routes 
-
-  > Get
-  ```
-  /users
-  /users/:nickname
-  /users/login?type=(email or nickname)
-  ```
-
-  > Post
-  ```
-  /users/register
-  ```
-
-  > Patch
-  ```
-  /users/update?type=(email or password or nickname or )
-  ```
-
-  > Delete
-  ```
-  /users/delete
-  ```
-    
-# Sokcet.IO
-## How to use
-### Select room
+# How to use
+## Select room
 
 > To select a room, you will create a socket emit with the message equal to "select_room", and in the content you will create an object with the key equal room and the content equal the room name. example:
 
@@ -34,7 +9,7 @@ socket.emit("select_room", {
 })
 ```
 
-### Send message
+## Send message
 > To send a message to a room, you will create a socket emit with the message equal to "message", and in the content you will create a object containing the room name, the user nickname and the payload. example:
 
 ```
@@ -46,7 +21,7 @@ socket.emit("select_room", {
 ```
 
 
-### Emits message types
+## Emits message types
 | Syntax        | Description |
 | -----------   | ----------- |
 | select_room   | used to select a room |

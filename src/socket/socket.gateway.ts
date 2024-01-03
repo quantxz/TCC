@@ -6,10 +6,12 @@ import { PrismaService } from 'src/services/prisma.service';
 import { UsersInRoomDto } from './dto/users-in-room.dto';
 import { selectRoomDataDto } from './dto/room-data.dto';
 
+
+
 //@WebSocketGateway({ cors: true }) para habilitar o cors
 @WebSocketGateway({ cors: true })
 export class SocketGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
-  private users: UsersInRoomDto[] = [];
+  private userAndRoom: UsersInRoomDto[] = [];
   private logger: Logger = new Logger('AppGateway');
   @WebSocketServer() server: Server;
 
@@ -17,26 +19,21 @@ export class SocketGateway implements OnGatewayInit, OnGatewayConnection, OnGate
 
   @SubscribeMessage("select_room")
   async selectRoom(client: Socket, data: selectRoomDataDto): Promise<void> {
+      /*
+        o codigo esta certo o problema é a permanencia do socket do usuario no front end
+        que muda quando ele passa da aba de seleção para a aba do chat o que faz com que o 
+        socket usado para conectar o client no select_room seja diferente do socket do mesmo 
+        usuario na aba do chat  
+      */
       client.join(data.room)
-      
-      const userInRoom = this.users.find(user => user.user === data.user && user.room === data.room)
-
-      if (userInRoom) {
-        userInRoom.socket_id = client.id
-      } else {
-          this.users.push({
-            room: data.room,
-            user: data.nickname,
-            socket_id: client.id
-          })
-      }
-
+      console.log(data.room)
   }
   
   //quando o cliente mandar uma mensagem com o tipo message este metodo sera chamado
   @SubscribeMessage('message')
   handleMessage(client: Socket, data): void {
-    console.log(this.users.find(user => user.room == data.room))
+    client.join(data.room)
+    console.log(data)
     this.server.to(data.room).emit("message", data.payload)
   }
 
