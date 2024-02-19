@@ -1,10 +1,11 @@
-# routes 
- UsersController
+# 🗺️ Rotas
+**Controllers:** 
 
- O `UsersController` gerencia operações relacionadas a usuários.
+O `UsersController` gerencia operações relacionadas a usuários.
 
-## Rotas
-## Usuarios
+
+
+## 👨‍💼 Usuarios
 ### 1. Criar Usuário
 
 - **Rota:** `POST /users/register`
@@ -178,8 +179,8 @@
 
 
     
-# Sokcet.IO
-## Como usar
+# 💬 Sokcet.IO
+## 🛠️ Como usar
 ### Selecionar sala
 
 > Para selecionar uma sala, você criará um socket emit com a mensagem igual a "select_room" e no conteúdo você criará um objeto com a chave igual a room e o conteúdo igual ao nome da sala. Exemplo:
@@ -208,7 +209,7 @@ socket.emit("select_room", {
 | message       | usado para enviar uma mensagem para uma sala  |
 | private_message | usado para enviar uma mensagem para um usuário especificado |
 
-# formas (modelo para enviar os dados)
+# 👤 formas (modelo para enviar os dados)
 ### CPF
 
 > O cpf deve ser passado para a api da seguinte forma "xxx.xxx.xxx-xx" no formato de string
@@ -216,15 +217,15 @@ socket.emit("select_room", {
 ### RG
 > O rg deve ser passado para a api da seguinte forma "xxxxxxxx-x" no formato de string
 
-# Types (tipos para serem passados na query)
+# 🌐 Types (tipos para serem passados na query)
 
-## Update query types 
-* ❓ Exemplo de url
+##  Update query types 
+### ❓ Exemplo de url
 ``` 
 /update?type=email || /update?type=password  || /update?type=nickname ||
 ```
 
-* ⚠️ informações necessárias
+### ⚠️ informações necessárias
 > **Email** - para atualizar o email é necessário enviar o nickname, password e surname para provar que é a propria pessoa. Exemplo:
 ```json
 {
@@ -252,4 +253,4 @@ socket.emit("select_room", {
   "password": "securepassword" ,
   "surname": "doe",
 }
-``` 
+```
