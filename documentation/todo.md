@@ -1,7 +1,7 @@
 # Erros:
     # tipar os erros(email ja existe, nickname ja existe, etc)
     # refatorar os controlers e os services para tratar os erros usando try/catch
-    
+    # arrumar o bug das rotas não estarem funcionando (resolvido é só remover o mimport do cors e excluir o app.use(cors))
 # Funcionalidades   
     # criar o sistema de salas e testar a api no frontend
     # dividir o register em verified e standart 

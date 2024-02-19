@@ -35,7 +35,7 @@ socket.emit("select_room", {
 ```
 
 ### Send message
-> To send a message to a room, you will create a socket emit with the message equal to "message", and in the content you will create a object containing the room name, the user nickname and the payload. example:
+> To send a message to a room, you will create a socket emit with the message equal to "message", and in the content you will create an object containing the room name, the user nickname and the payload. example:
 
 ```
     socket.emit("message", {
@@ -51,4 +51,4 @@ socket.emit("select_room", {
 | -----------   | ----------- |
 | select_room   | used to select a room |
 | message       | used to send a message to a room  |
-| personal_message | used to send a message to speccified a user |
+| private_message | used to send a message to speccified a user |

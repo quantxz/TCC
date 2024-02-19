@@ -1,82 +1,210 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Res, Query } from '@nestjs/common';
 import { Response } from 'express';
 import { UserService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UserDto } from './dto/user.dto';
+import { Body, Controller, Delete, Get, Logger, Param, Patch, Post, Query, Res } from '@nestjs/common';
+import { plainToClass } from 'class-transformer';
+import { validate } from 'class-validator';
 
 @Controller('users')
 export class UsersController {
-  constructor(private readonly userService: UserService) {}
+  private logger: Logger = new Logger('UsersController');
+  constructor(private readonly userService: UserService) { }
 
   @Post('register')
-  async create(@Body() createUserDto: CreateUserDto, @Res() res: Response) {
-    const user = await this.userService.create(createUserDto);
-    
-    return res.status(200).json({
-      message: "user created",
-      returnedData: user,
-    });
+  public async create(@Body() createUserDto: CreateUserDto, @Res() res: Response) {
+    try {
+      // Transforma o objeto plain (JSON) em uma instância da classe DTO
+      const userDtoInstance = plainToClass(CreateUserDto, createUserDto);
+
+      // Realiza a validação usando o class-validator
+      const errors = await validate(userDtoInstance);
+
+      if (errors.length > 0) {
+        // Lida com os erros de validação aqui
+        return res.status(400).json({ message: 'Erro de validação', errors });
+      }
+
+      // Se não houver erros, continue com a lógica do seu controlador
+      const user = await this.userService.create(userDtoInstance);
+
+      return res.status(201).json({
+        message: 'Usuário criado',
+        returnedData: user,
+      });
+
+    } catch (error) {
+      this.logger.error("error in user creation operation: " + error)
+
+      return res.status(500).json({
+        message: 'Internal Server Error',
+        status: 500,
+      });
+    }
   }
 
   @Get()
   async findAll(@Res() res: Response) {
-    const user = await this.userService.findAll();
+    try {
+      const users = await this.userService.findAll();
 
-    return res.status(200).json({
-      message: "returning all users",
-      returnedData: user,
-    }); 
+      if (users && users.length > 0) {
+        return res.status(200).json({
+          message: "Retornando dados dos usuários",
+          returnedData: users,
+        });
+      } else {
+        return res.status(404).json({
+          message: "Nenhum usuário encontrado",
+          status: 404,
+        });
+      }
+
+    } catch (error) {
+      this.logger.error("Error in findAll users operation: " + error)
+
+      return res.status(500).json({
+        message: 'Internal Server Error',
+        status: 500,
+      });
+    }
   }
 
-  @Get('login')
-  async findUnique(@Body() userDto: UserDto, @Res() res: Response, @Query('type') type: string) {
-    const user: UserDto | {} = await this.userService.findUnique(type, userDto);
+  @Post('login')
+  async login(@Body() loginUserDto: CreateUserDto, @Res() res: Response) {
+    try {
+      // Transforma o objeto plain (JSON) em uma instância da classe DTO
+      const userDtoInstance = plainToClass(CreateUserDto, loginUserDto);
 
-    return res.status(200).json({
-      message: "returning all users",
-      status: 200,
-      returnedData: user,
-    }); 
+      // Realiza a validação usando o class-validator
+      const errors = await validate(userDtoInstance);
+
+      if (errors.length > 0) {
+        // Lida com os erros de validação aqui
+        return res.status(400).json({ message: 'Erro de validação', errors });
+      }
+
+      // Se não houver erros, continue com a lógica do seu controlador
+      const user = await this.userService.findOne(userDtoInstance);
+
+      return res.status(200).json({
+        message: 'retornando dados do usuario achado',
+        status: 200,
+        returnedData: user,
+      });
+
+    } catch (error) {
+      this.logger.error("Error in login user operation: " + error)
+
+      return res.status(500).json({
+        message: 'Internal Server Error',
+        status: 500,
+      });
+    }
   }
 
   @Get(':nickname')
   async findOne(@Param('nickname') nickname: string, @Res() res: Response) {
-    const user = await this.userService.findOne(nickname); 
-    
-    return res.status(200).json({
-      message: "returning the found user",
-      returnedData: user,
-    });
+    try {
+      const user = await this.userService.findByNickname(nickname);
+
+      if(user) {
+        return res.status(200).json({
+          message: "retornando dados do usuario encontrado",
+          returnedData: user,
+        });
+      } else {
+        return res.status(404).json({
+          message: "usuario não encontrado",
+          status: 404,
+        });
+      }
+    } catch (error) {
+
+      this.logger.error("Error in get by nickname operation: " + error)
+
+      return res.status(500).json({
+        message: 'Internal Server Error',
+        status: 500,
+      });
+    }
   }
 
   @Patch('update')
   async update(@Query('type') type: string, @Body() updateUserDto: UpdateUserDto, @Res() res: Response) {
-    const user: UserDto | {} = await this.userService.update(type, updateUserDto)
-    
-    return res.status(200).json({
-      message: "user updated",
-      returnedData: user,
-    });
+    try {
+      if (['email', 'password', 'nickname'].includes(type)) {
+        
+        const userDtoInstance = plainToClass(CreateUserDto, updateUserDto);
+
+        
+        const errors = await validate(userDtoInstance);
+
+        if (errors.length > 0) {
+          return res.status(400).json({ message: 'Erro de validação', errors });
+        }
+
+        const user: UserDto | {} = await this.userService.update(type, userDtoInstance)
+
+        return res.status(200).json({
+          message: "usuario atualizado",
+          returnedData: user,
+        });
+      }
+
+
+    } catch (error) {
+      this.logger.error("Error in user update operation: " + error)
+      return res.status(500).json({
+        message: 'Internal Server Error',
+        status: 500,
+      });
+    }
   }
 
   @Delete('delete')
   async remove(@Body() userDto: UserDto, @Res() res: Response) {
-    const exUser: UserDto = await this.userService.remove(userDto)
+    try {
 
-    return res.status(200).json({
-      message: "user deleted",
-      returnedData: exUser,
-    });
+      const userDtoInstace = plainToClass(UserDto, userDto)
+
+      const errors = await validate(userDtoInstace)
+
+      if (errors.length > 0) {
+        return res.status(400).json({ message: 'Erro de validação', errors });
+      }
+
+      const exUser: UserDto = await this.userService.remove(userDtoInstace)
+
+      return res.status(200).json({
+        message: "usuario deletado",
+        returnedData: exUser,
+      });
+    } catch (error) {
+      this.logger.error("Error in delete user operation: " + error)
+      return res.status(500).json({
+        message: 'Internal Server Error',
+        status: 500,
+      });
+    }
   }
 
-  // @Get('test')
-  // async redisTest(@Res() res: Response) {
-  //   const cacheUser = await this.userService.getAllRedis()
+  @Get('test')
+  async redisTest(@Res() res: Response) {
+    try {
+      const cacheUser = await this.userService.FindMnay()
 
-  //   return res.status(200).json({
-  //     message: "user deleted",
-  //     returnedData: cacheUser,
-  //   });
-  // }
+      return res.status(200).json({
+        message: "retornando dados do usuario encontrado",
+        returnedData: cacheUser,
+      });
+    } catch (error) {
+      this.logger.error("Error in redis test operation: " + error)
+      return res.status(500).json({
+        message: 'Internal Server Error',
+        status: 500,
+      });
+    }
+  }
 }

@@ -26,4 +26,4 @@ socket.emit("select_room", {
 | -----------   | ----------- |
 | select_room   | used to select a room |
 | message       | used to send a message to a room  |
-| personal_message | used to send a message to speccified a user |
+| private_message | used to send a message to speccified a user |

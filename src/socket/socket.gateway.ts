@@ -2,9 +2,10 @@ import { Logger } from '@nestjs/common';
 import { OnGatewayConnection, OnGatewayDisconnect, OnGatewayInit, SubscribeMessage, WebSocketGateway, WebSocketServer } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 import { RoomDto } from './dto/rooms.dto';
-import { PrismaService } from 'src/services/prisma.service';
+import { PrismaService } from 'src/services/configs/prisma.service';
 import { UsersInRoomDto } from './dto/users-in-room.dto';
 import { selectRoomDataDto } from './dto/room-data.dto';
+import { MessageDto } from './dto/wss/socket-room-messages.dto';
 
 
 
@@ -18,7 +19,7 @@ export class SocketGateway implements OnGatewayInit, OnGatewayConnection, OnGate
   constructor(private prismaService: PrismaService) {}
 
   @SubscribeMessage("select_room")
-  async selectRoom(client: Socket, data: selectRoomDataDto): Promise<void> {
+  async selectRoom(data: selectRoomDataDto, client?: Socket): Promise<void> {
       /*
         o codigo esta certo o problema é a permanencia do socket do usuario no front end
         que muda quando ele passa da aba de seleção para a aba do chat o que faz com que o 
@@ -26,12 +27,26 @@ export class SocketGateway implements OnGatewayInit, OnGatewayConnection, OnGate
         usuario na aba do chat  
       */
       client.join(data.room)
-      console.log(data.room)
   }
   
   //quando o cliente mandar uma mensagem com o tipo message este metodo sera chamado
   @SubscribeMessage('message')
-  handleMessage(client: Socket, data): void {
+  async handleMessage(client: Socket, data: MessageDto | any): Promise<void> {
+    this.selectRoom(data.room)
+    this.server.to(data.room).emit("message", data.payload)
+    
+    await this.prismaService.messages.create({
+      data: {
+        author: data.user,
+        content: data.payload,
+        room: data.room
+      }
+    })
+     
+  }
+
+  @SubscribeMessage('private_message')
+  handlePrivateMessage(client: Socket, data): void {
     client.join(data.room)
     console.log(data)
     this.server.to(data.room).emit("message", data.payload)

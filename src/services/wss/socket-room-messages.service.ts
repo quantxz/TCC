@@ -1,5 +1,5 @@
 import { MessageDto } from "src/socket/dto/wss/socket-room-messages.dto";
-import { PrismaService } from "../prisma.service";
+import { PrismaService } from "../configs/prisma.service";
 import { Injectable } from "@nestjs/common";
 
 
@@ -11,7 +11,7 @@ export class SocketMessageService {
         const message = await this.prismaService.messages.create({
             data: {
                 author: data.author,
-                content: data.content,
+                content: data.payload,
                 room:   data.room
             }
         })
@@ -22,7 +22,7 @@ export class SocketMessageService {
             where: {
                 author: data.author,
                 room: data.room,
-                content: data.content
+                content: data.payload
             }
         }) 
         return message
