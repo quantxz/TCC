@@ -125,7 +125,8 @@ export class UserService {
         const user: UserDto = await this.prismaService.user.findUnique({
           where: {
             email: updateUserDto.email,
-            password: updateUserDto.password
+            password: updateUserDto.password,
+            surname: updateUserDto.surname
           }
         })
   

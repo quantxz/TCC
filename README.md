@@ -220,10 +220,34 @@ socket.emit("select_room", {
 
 ## Update query types 
 
-> **Email** - para atualizar o email é nescessario enviar o nickname, password e surname para provaar que é a propria pessoa 
+``` 
+/update?type=email ||/update?type=password  || /update?type=nickname ||
+``` 
+> **Email** - para atualizar o email é nescessario enviar o nickname, password e surname para provar que é a propria pessoa. Exemplo:
+```json
+{
+  "nickname": "jhon" ,
+  "surname": "doe",
+  "password": "securepassword",
+}
+``` 
 
 
-> **Password** - para atualizar a senha é nescessario enviar o nickname, email e surname para provaar que é a propria pessoa 
+> **Password** - para atualizar a senha é nescessario enviar o nickname, email e surname para provar que é a propria pessoa. Exemplo:
+```json
+{
+  "nickname": "jhon" ,
+  "surname": "doe",
+  "email": "jhon.doe@example.com",
+}
+``` 
 
 
-> **Nickname** - para atualizar a senha é nescessario enviar o email e password para provaar que é a propria pessoa 
+> **Nickname** - para atualizar o nickname é nescessario enviar o email, password e surname para provar que é a propria pessoa. Exemplo:
+```json
+{
+  "email": "jhon.doe@example.com",
+  "password": "securepassword" ,
+  "surname": "doe",
+}
+``` 
