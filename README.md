@@ -219,11 +219,13 @@ socket.emit("select_room", {
 # Types (tipos para serem passados na query)
 
 ## Update query types 
+* ❓ Exemplo de url
+``` 
+/update?type=email || /update?type=password  || /update?type=nickname ||
+```
 
-``` 
-/update?type=email ||/update?type=password  || /update?type=nickname ||
-``` 
-> **Email** - para atualizar o email é nescessario enviar o nickname, password e surname para provar que é a propria pessoa. Exemplo:
+* ⚠️ informações necessárias
+> **Email** - para atualizar o email é necessário enviar o nickname, password e surname para provar que é a propria pessoa. Exemplo:
 ```json
 {
   "nickname": "jhon" ,
@@ -233,7 +235,7 @@ socket.emit("select_room", {
 ``` 
 
 
-> **Password** - para atualizar a senha é nescessario enviar o nickname, email e surname para provar que é a propria pessoa. Exemplo:
+> **Password** - para atualizar a senha é necessário enviar o nickname, email e surname para provar que é a propria pessoa. Exemplo:
 ```json
 {
   "nickname": "jhon" ,
@@ -243,7 +245,7 @@ socket.emit("select_room", {
 ``` 
 
 
-> **Nickname** - para atualizar o nickname é nescessario enviar o email, password e surname para provar que é a propria pessoa. Exemplo:
+> **Nickname** - para atualizar o nickname é necessário enviar o email, password e surname para provar que é a propria pessoa. Exemplo:
 ```json
 {
   "email": "jhon.doe@example.com",
