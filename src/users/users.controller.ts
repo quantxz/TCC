@@ -6,6 +6,7 @@ import { UserDto } from './dto/user.dto';
 import { Body, Controller, Delete, Get, Logger, Param, Patch, Post, Query, Res } from '@nestjs/common';
 import { plainToClass } from 'class-transformer';
 import { validate } from 'class-validator';
+import { LoginUserDto } from './dto/login-user.dto';
 
 @Controller('users')
 export class UsersController {
@@ -72,10 +73,10 @@ export class UsersController {
   }
 
   @Post('login')
-  async login(@Body() loginUserDto: CreateUserDto, @Res() res: Response) {
+  async login(@Body() loginUserDto: LoginUserDto, @Res() res: Response) {
     try {
       // Transforma o objeto plain (JSON) em uma instância da classe DTO
-      const userDtoInstance = plainToClass(CreateUserDto, loginUserDto);
+      const userDtoInstance = plainToClass(LoginUserDto, loginUserDto);
 
       // Realiza a validação usando o class-validator
       const errors = await validate(userDtoInstance);
@@ -136,7 +137,7 @@ export class UsersController {
     try {
       if (['email', 'password', 'nickname'].includes(type)) {
         
-        const userDtoInstance = plainToClass(CreateUserDto, updateUserDto);
+        const userDtoInstance = plainToClass(UpdateUserDto, updateUserDto);
 
         
         const errors = await validate(userDtoInstance);
@@ -148,7 +149,7 @@ export class UsersController {
         const user: UserDto | {} = await this.userService.update(type, userDtoInstance)
 
         return res.status(200).json({
-          message: "usuario atualizado",
+          message: "dados do usuario atualizados",
           returnedData: user,
         });
       }
@@ -193,7 +194,7 @@ export class UsersController {
   @Get('test')
   async redisTest(@Res() res: Response) {
     try {
-      const cacheUser = await this.userService.FindMnay()
+      const cacheUser = await this.userService.FindMany()
 
       return res.status(200).json({
         message: "retornando dados do usuario encontrado",

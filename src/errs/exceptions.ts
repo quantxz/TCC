@@ -14,6 +14,6 @@ export class InvalidTypeException extends HttpException {
 
 export class UsersNotFoundException extends HttpException {
   constructor() {
-    super('Tipo inválido', HttpStatus.BAD_REQUEST);
+    super('Usuários não encontrados', HttpStatus.NOT_FOUND);
   }
 }

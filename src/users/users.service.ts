@@ -1,14 +1,14 @@
-import { UserDto } from 'src/users/dto/user.dto';
+import { UserDto } from './dto/user.dto';
 import { Injectable, Logger } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { PrismaService } from 'src/services/configs/prisma.service';
-import { RedisService } from 'src/services/configs/redis.service';
-import { InvalidTypeException, UserNotFoundException } from 'src/errs/exceptions';
+import { PrismaService } from '../services/configs/prisma.service';
+import { RedisService } from '../services/configs/redis.service';
+import { InvalidTypeException, UserNotFoundException } from '../errs/exceptions';
 
 @Injectable()
 export class UserService {
-  private logger: Logger = new Logger('UsersController');
+  private logger: Logger = new Logger('UsersServices');
   constructor(private readonly prismaService: PrismaService, private readonly redisService: RedisService) { }
 
   async create(createUserDto: CreateUserDto) {
@@ -46,6 +46,7 @@ export class UserService {
       const user: UserDto = await this.prismaService.user.findUnique({
         where: {
           nickname: UserDto.nickname,
+          email: UserDto.email,
           password: UserDto.password
         }
       })
@@ -175,7 +176,7 @@ export class UserService {
     }
   }
 
-  async FindMnay() {
+  async FindMany() {
     try {
       const cachedUsers = await this.redisService.get('users');
 

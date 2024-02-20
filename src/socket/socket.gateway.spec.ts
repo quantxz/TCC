@@ -6,7 +6,17 @@ describe('SocketGateway', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [SocketGateway],
+      providers: [{
+        provide: SocketGateway,
+        useValue: {
+          selectRoom: jest.fn(),
+          handleMessage: jest.fn(),
+          handlePrivateMessage: jest.fn(),
+          afterInit: jest.fn(),
+          handleConnection: jest.fn(),
+          handleDisconnect: jest.fn()
+        }
+      }],
     }).compile();
 
     gateway = module.get<SocketGateway>(SocketGateway);
