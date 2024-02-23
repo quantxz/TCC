@@ -22,7 +22,7 @@ export class UserService {
           nickname: createUserDto.nickname
         }
       });
-  
+
       return user;
     } catch (error) {
       this.logger.error("Erro durante a criação do usuario: " + error)
@@ -35,7 +35,7 @@ export class UserService {
       const users: UserDto[] = await this.prismaService.user.findMany()
 
       return users;
-    } catch(error) {
+    } catch (error) {
       this.logger.error("Erro durante a procura pelos usuarios: " + error)
       throw new Error("Erro durante a recuperação de dados dos usuarios")
     }
@@ -50,108 +50,108 @@ export class UserService {
           password: UserDto.password
         }
       })
-  
+
       if (user) {
         return user;
       } else {
         throw new UserNotFoundException();
       }
-    } catch(error) {
+    } catch (error) {
       this.logger.error("Erro durante a procura pelo usuario: " + error)
       throw new Error("erro durante a procura do usuario: " + error)
     }
   }
 
   async findUnique(type: string, userDto: UserDto) {
+    let user: UserDto;
     try {
-      if (type === "nickname") {
-        const user: UserDto = await this.prismaService.user.findUnique({
-          where: {
-            nickname: userDto.nickname,
-            password: userDto.password
-          }
-        })
-  
-        return user
-  
-      } else if (type === "email") {
-        const user: UserDto = await this.prismaService.user.findUnique({
-          where: {
-            email: userDto.email,
-            password: userDto.password
-          }
-        })
-  
-        return user
-      } else {
-        throw new UserNotFoundException();
+      switch (type) {
+        case "nickname":
+          user = await this.prismaService.user.findUnique({
+            where: {
+              nickname: userDto.nickname,
+              password: userDto.password
+            }
+          })
+
+          break;
+        case "email":
+          user = await this.prismaService.user.findUnique({
+            where: {
+              email: userDto.email,
+              password: userDto.password
+            }
+          })
+
+          break;
+        default:
+          throw new UserNotFoundException();
       }
-    } catch(error) {
+
+      return user;
+
+    } catch (error) {
       this.logger.error("Erro durante a procura pelo usuario: " + error)
       throw new Error("Erro durante a procura pelo usuario: " + error)
     }
   }
 
   async update(updateType: string, updateUserDto: UpdateUserDto) {
+    let userUpdated: UserDto;
     try {
-      if (updateType === "email") {
-        const userUpdated: UserDto = await this.prismaService.user.update({
-          where: {
-            nickname: updateUserDto.nickname,
-            password: updateUserDto.password,
-            surname: updateUserDto.surname
-          },
-          data: {
-            email: updateUserDto.email
-          }
-        })
-  
-        return userUpdated;
-  
-      } else if (updateType === "password") {
-        const userUpdated: UserDto = await this.prismaService.user.update({
-          where: {
-            nickname: updateUserDto.nickname,
-            email: updateUserDto.email,
-            surname: updateUserDto.surname
-          },
-          data: {
-            password: updateUserDto.password
-          }
-        })
-  
-        return userUpdated;
-      } else if (updateType === "nickname") {
-  
-        const user: UserDto = await this.prismaService.user.findUnique({
-          where: {
-            email: updateUserDto.email,
-            password: updateUserDto.password,
-            surname: updateUserDto.surname
-          }
-        })
-  
-        if (user.nickname !== updateUserDto.nickname) {
-          const userUpdated: UserDto = await this.prismaService.user.update({
+      switch (updateType) {
+        case "email":
+          userUpdated = await this.prismaService.user.update({
             where: {
-              nickname: user.nickname,
+              nickname: updateUserDto.nickname,
+              password: updateUserDto.password,
+              surname: updateUserDto.surname
             },
             data: {
-              nickname: updateUserDto.nickname,
+              email: updateUserDto.email
             }
-          });
-  
-          return userUpdated;
-        }
-  
-        return {
-          message: "this nickname already exists",
-          messageContent: user
-        };
-      } else {
-        throw new InvalidTypeException();
+          })
+
+          break;
+        case "password":
+          userUpdated = await this.prismaService.user.update({
+            where: {
+              nickname: updateUserDto.nickname,
+              email: updateUserDto.email,
+              surname: updateUserDto.surname
+            },
+            data: {
+              password: updateUserDto.password
+            }
+          })
+
+          break;
+        case "nickname":
+          const user: UserDto = await this.prismaService.user.findUnique({
+            where: {
+              email: updateUserDto.email,
+              password: updateUserDto.password,
+              surname: updateUserDto.surname
+            }
+          })
+
+          if (user.nickname !== updateUserDto.nickname) {
+            userUpdated = await this.prismaService.user.update({
+              where: {
+                nickname: user.nickname,
+              },
+              data: {
+                nickname: updateUserDto.nickname,
+              }
+            });
+
+          }
+
+          break;
+        default:
+          throw new InvalidTypeException();
       }
-    } catch(error) {
+    } catch (error) {
       this.logger.error("Erro durante a atualização dos dados do usuario: " + error)
       throw new Error("Erro durante a atualização dos dados do usuario: " + error)
     }
@@ -168,9 +168,9 @@ export class UserService {
           surname: userDto.surname
         }
       })
-  
+
       return exUser
-    } catch(error) {
+    } catch (error) {
       this.logger.error("Erro durante a exclusão do usuario: " + error)
       throw new Error("Erro durante a exclusão do usuario: " + error)
     }
@@ -180,18 +180,18 @@ export class UserService {
     try {
       const cachedUsers = await this.redisService.get('users');
 
-    if (!cachedUsers) {
-      const users = await this.prismaService.user.findMany();
+      if (!cachedUsers) {
+        const users = await this.prismaService.user.findMany();
 
-      await this.redisService.set('users', JSON.stringify(users), 'EX', 15)
-      console.log('\x1b[36m%s\x1b[0m', 'FROM PRISMA')
-      return users
-    }
+        await this.redisService.set('users', JSON.stringify(users), 'EX', 15)
+        console.log('\x1b[36m%s\x1b[0m', 'FROM PRISMA')
+        return users
+      }
 
-    console.log('\x1b[36m%s\x1b[0m', 'FROM CACHE')
+      console.log('\x1b[36m%s\x1b[0m', 'FROM CACHE')
 
-    return JSON.parse(cachedUsers);
-    } catch(error) {
+      return JSON.parse(cachedUsers);
+    } catch (error) {
       this.logger.error("Erro durante a procura pelo usuario no redis: " + error)
       throw new Error("Erro durante a procura pelo usuario no redis: " + error)
     }
@@ -204,9 +204,9 @@ export class UserService {
           nickname
         }
       })
-  
+
       return user;
-    } catch(error) {
+    } catch (error) {
       this.logger.error("Erro durante a procura pelo usuario através do nickname: " + error)
       throw new Error("Erro durante a procura pelo usuario através do nickname: " + error)
     }
