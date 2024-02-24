@@ -3,8 +3,8 @@ import { UserDto } from "./user.dto";
 
 export class LoginUserDto extends UserDto {
     @IsOptional()
-    name: string;
+    declare name: string;
 
     @IsOptional()
-    surname: string;
+    declare surname: string;
 }

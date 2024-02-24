@@ -4,6 +4,10 @@ import { UsersController } from './users.controller';
 import { UserService } from './users.service';
 import { UserDto } from './dto/user.dto';
 import { Response } from "express"
+import { sendEmailProducerService } from '../jobs/sendEmail-producer.service';
+import { sendMailConsumer } from '../jobs/sendEmail-consumer';
+import { MailerModule } from '@nestjs-modules/mailer';
+import { BullModule } from '@nestjs/bull';
 
 describe('UsersController', () => {
   let controller: UsersController;
@@ -28,8 +32,30 @@ describe('UsersController', () => {
           update: jest.fn(),
           remove: jest.fn(),
           FindMany: jest.fn()
-        }
-      }],
+        },
+        
+      }, sendEmailProducerService, sendMailConsumer],
+      imports: [
+          BullModule.forRoot({
+            redis: {
+              host: 'localhost',
+              port: 6379,
+            },
+          }),
+          MailerModule.forRoot({
+            transport: {
+              host: process.env.MAIL_HOST,
+              port: Number(process.env.MAIL_PORT),
+              auth: {
+                user: process.env.USER,
+                pass: process.env.PASS
+              }
+            }
+          }),
+          BullModule.registerQueue({
+            name: "mail-Queue"
+          })
+        ],
     }).compile();
 
     controller = module.get<UsersController>(UsersController);

@@ -30,6 +30,6 @@ import { sendMailConsumer } from 'src/jobs/sendEmail-consumer';
       name: "mail-Queue"
     })
   ],
-  providers: [UserService,  PrismaService, RedisService, sendEmailProducerService, sendMailConsumer],
+  providers: [UserService, PrismaService, RedisService, sendEmailProducerService, sendMailConsumer],
 })
 export class UsersModule {}
