@@ -8,13 +8,15 @@ import { plainToClass } from 'class-transformer';
 import { validate } from 'class-validator';
 import { LoginUserDto } from './dto/login-user.dto';
 
+
 @Controller('users')
 export class UsersController {
   private logger: Logger = new Logger('UsersController');
-  constructor(private readonly userService: UserService) { }
+  constructor(private readonly userService: UserService) {  }
 
   @Post('register')
   public async create(@Body() createUserDto: CreateUserDto, @Res() res: Response) {
+
     try {
       // Transforma o objeto plain (JSON) em uma instância da classe DTO
       const userDtoInstance = plainToClass(CreateUserDto, createUserDto);
