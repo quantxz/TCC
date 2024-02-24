@@ -7,14 +7,16 @@ import { Body, Controller, Delete, Get, Logger, Param, Patch, Post, Query, Res }
 import { plainToClass } from 'class-transformer';
 import { validate } from 'class-validator';
 import { LoginUserDto } from './dto/login-user.dto';
+import { Worker } from "worker_threads"
 
 @Controller('users')
 export class UsersController {
   private logger: Logger = new Logger('UsersController');
-  constructor(private readonly userService: UserService) { }
+  constructor(private readonly userService: UserService) {  }
 
   @Post('register')
   public async create(@Body() createUserDto: CreateUserDto, @Res() res: Response) {
+
     try {
       // Transforma o objeto plain (JSON) em uma instância da classe DTO
       const userDtoInstance = plainToClass(CreateUserDto, createUserDto);
@@ -29,7 +31,16 @@ export class UsersController {
 
       // Se não houver erros, continue com a lógica do seu controlador
       const user = await this.userService.create(userDtoInstance);
-
+    
+      if("") {}
+      const worker = new Worker('./src/services/workers/workers-email.ts' || './src/services/workers/workers-email.js')
+         
+      worker.postMessage("canalsemfoco223@gmail.com");
+      
+      worker.on('message', ({ status, date }: any) => {
+          console.log(`Trabalhador diz: ${status} \nhorario: ${date.hour}:${date.minute}`);
+      });
+      
       return res.status(201).json({
         message: 'Usuário criado',
         returnedData: user,
@@ -146,7 +157,7 @@ export class UsersController {
           return res.status(400).json({ message: 'Erro de validação', errors });
         }
 
-        const user: UserDto | {} = await this.userService.update(type, userDtoInstance)
+        const user: UserDto = await this.userService.update(type, userDtoInstance)
 
         return res.status(200).json({
           message: "dados do usuario atualizados",

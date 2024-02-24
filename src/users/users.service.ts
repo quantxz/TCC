@@ -151,6 +151,7 @@ export class UserService {
         default:
           throw new InvalidTypeException();
       }
+      return userUpdated
     } catch (error) {
       this.logger.error("Erro durante a atualização dos dados do usuario: " + error)
       throw new Error("Erro durante a atualização dos dados do usuario: " + error)
