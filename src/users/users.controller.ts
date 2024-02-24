@@ -7,12 +7,13 @@ import { Body, Controller, Delete, Get, Logger, Param, Patch, Post, Query, Res }
 import { plainToClass } from 'class-transformer';
 import { validate } from 'class-validator';
 import { LoginUserDto } from './dto/login-user.dto';
-import { Worker } from "worker_threads"
+import { MailerService } from '@nestjs-modules/mailer';
+import { sendEmailProducerService } from 'src/jobs/sendEmail-producer.service';
 
 @Controller('users')
 export class UsersController {
   private logger: Logger = new Logger('UsersController');
-  constructor(private readonly userService: UserService) {  }
+  constructor(private readonly userService: UserService, private readonly mailService: sendEmailProducerService) {  }
 
   @Post('register')
   public async create(@Body() createUserDto: CreateUserDto, @Res() res: Response) {
@@ -31,15 +32,9 @@ export class UsersController {
 
       // Se não houver erros, continue com a lógica do seu controlador
       const user = await this.userService.create(userDtoInstance);
-    
-      if("") {}
-      const worker = new Worker('./src/services/workers/workers-email.ts' || './src/services/workers/workers-email.js')
-         
-      worker.postMessage("canalsemfoco223@gmail.com");
-      
-      worker.on('message', ({ status, date }: any) => {
-          console.log(`Trabalhador diz: ${status} \nhorario: ${date.hour}:${date.minute}`);
-      });
+
+      //envia o email para o usuario
+      this.mailService.sendMail(createUserDto)
       
       return res.status(201).json({
         message: 'Usuário criado',
