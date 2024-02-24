@@ -7,12 +7,13 @@ import { Body, Controller, Delete, Get, Logger, Param, Patch, Post, Query, Res }
 import { plainToClass } from 'class-transformer';
 import { validate } from 'class-validator';
 import { LoginUserDto } from './dto/login-user.dto';
-
+import { MailerService } from '@nestjs-modules/mailer';
+import { sendEmailProducerService } from 'src/jobs/sendEmail-producer.service';
 
 @Controller('users')
 export class UsersController {
   private logger: Logger = new Logger('UsersController');
-  constructor(private readonly userService: UserService) {  }
+  constructor(private readonly userService: UserService, private readonly mailService: sendEmailProducerService) {  }
 
   @Post('register')
   public async create(@Body() createUserDto: CreateUserDto, @Res() res: Response) {
@@ -32,6 +33,9 @@ export class UsersController {
       // Se não houver erros, continue com a lógica do seu controlador
       const user = await this.userService.create(userDtoInstance);
 
+      //envia o email para o usuario
+      this.mailService.sendMail(createUserDto)
+      
       return res.status(201).json({
         message: 'Usuário criado',
         returnedData: user,
@@ -148,7 +152,7 @@ export class UsersController {
           return res.status(400).json({ message: 'Erro de validação', errors });
         }
 
-        const user: UserDto | {} = await this.userService.update(type, userDtoInstance)
+        const user: UserDto = await this.userService.update(type, userDtoInstance)
 
         return res.status(200).json({
           message: "dados do usuario atualizados",
