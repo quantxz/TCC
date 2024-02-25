@@ -6,6 +6,8 @@ import { PrismaService } from '../services/configs/prisma.service';
 import { UsersInRoomDto } from './dto/users-in-room.dto';
 import { selectRoomDataDto } from './dto/room-data.dto';
 import { MessageDto } from './dto/wss/socket-room-messages.dto';
+import { insertMessageProducerService } from 'src/jobs/messages/insert-message-producer.service';
+import { SocketMessageService } from 'src/services/wss/socket-room-messages.service';
 
 
 
@@ -14,35 +16,48 @@ import { MessageDto } from './dto/wss/socket-room-messages.dto';
 export class SocketGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
   private userAndRoom: UsersInRoomDto[] = [];
   private logger: Logger = new Logger('AppGateway');
+
   @WebSocketServer() server: Server;
 
-  constructor(private prismaService: PrismaService) {}
+  constructor(
+    private prismaService: PrismaService,
+    private messageJobService: insertMessageProducerService,
+    private messagesService: SocketMessageService
+  ) { }
+
+  @SubscribeMessage('find_messages')
+  async findMessages(client: Socket, roomName: string): Promise<void> {
+    const messages = await this.messagesService.findMessages(roomName);
+    // Emita as mensagens de volta para todos os clientes na sala
+    this.server.to(roomName).emit('all_messages', messages);
+  }
 
   @SubscribeMessage("select_room")
-  async selectRoom(data: selectRoomDataDto, client?: Socket): Promise<void> {
-      /*
-        o codigo esta certo o problema é a permanencia do socket do usuario no front end
-        que muda quando ele passa da aba de seleção para a aba do chat o que faz com que o 
-        socket usado para conectar o client no select_room seja diferente do socket do mesmo 
-        usuario na aba do chat  
-      */
-      client.join(data.room)
-  }
-  
-  //quando o cliente mandar uma mensagem com o tipo message este metodo sera chamado
-  @SubscribeMessage('message')
-  async handleMessage(client: Socket, data: MessageDto | any): Promise<void> {
-    this.selectRoom(data.room)
-    this.server.to(data.room).emit("message", data.payload)
-    
-    await this.prismaService.messages.create({
-      data: {
-        author: data.user,
-        content: data.payload,
-        room: data.room
+  async selectRoom(roomName: string, client: Socket) {
+    let room = await this.prismaService.chatRoom.findUnique({
+      where: {
+        name: roomName
       }
     })
-     
+
+    if (room) {
+      client.join(roomName)
+    } else {
+      await this.prismaService.chatRoom.create({
+        data: {
+          name: roomName
+        }
+      });
+
+      client.join(roomName);
+    }
+  }
+
+  //quando o cliente mandar uma mensagem com o tipo message este metodo sera chamado
+  @SubscribeMessage('message')
+  async handleMessage(client: Socket, data: MessageDto): Promise<void> {
+    this.server.to(data.room).emit("message", data.content)
+    this.messageJobService.insertMessage(data)
   }
 
   @SubscribeMessage('private_message')
@@ -59,11 +74,13 @@ export class SocketGateway implements OnGatewayInit, OnGatewayConnection, OnGate
 
   //durante a conexão do usuario
   handleConnection(client: Socket) {
-    this.logger.log( `Client connected: ${client.id}`);
+    const roomName = client.handshake.query.roomName as string;
+    this.logger.log(`Client connected: ${client.id}`);
+    this.selectRoom(roomName, client);
   }
 
   //durante a desconexão do usuario
   handleDisconnect(client: Socket) {
-    this.logger.log( `Client disconnected: ${client.id}`);
+    this.logger.log(`Client disconnected: ${client.id}`);
   }
 }

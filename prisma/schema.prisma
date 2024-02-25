@@ -33,7 +33,7 @@ model ChatRoom {
 
 model Messages {
   id            String      @default(uuid()) @id
-  author        String      @unique
+  author        String      
   content       String
   room          String
 
