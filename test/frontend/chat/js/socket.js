@@ -1,21 +1,44 @@
+const  url = new URLSearchParams(window.location.search);
+const room = url.get("room");
+
+const socket = io("http://localhost:3000", {
+    query: { roomName: room }
+});
 
 const button = document.querySelector(".submit")
+
+const render = (author, message) => {
+    const div = document.querySelector(".messages")
+    const divMessage = document.createElement("div");
+    const messageContent = `<p><strong>${author} - ${message}</strong></p>`;
+    divMessage.innerHTML = messageContent;
+    div.appendChild(divMessage);
+}
 
 
 button.addEventListener("click", (e) => {
     e.preventDefault()
-    const input = document.querySelector(".messageContent")
+    const input = document.querySelector(".messageContent").value
 
     socket.emit("message", {
-        user: "Anderson",
-        room: "room",
-        payload: "hello World"
+        author: "dfhhsetfasgedf",
+        room: "room0",
+        content: input
     })
 })
+
+socket.emit("find_messages", "room0")
+
+socket.on('all_messages', (messages) => {
+    messages.forEach(message => {
+      render(message.author, message.content);
+    });
+});
 
 // Receptor de mensagem do servidor
 socket.on("message", (data) => {
     console.log({
             message: `this is the ${data}`
     });
+    render("room", data)
 });

@@ -34,6 +34,8 @@ export class SocketRoomService {
                 name: data.name
             }
         })
+
+        return room
     }
 
 }

@@ -8,7 +8,7 @@ import { plainToClass } from 'class-transformer';
 import { validate } from 'class-validator';
 import { LoginUserDto } from './dto/login-user.dto';
 import { MailerService } from '@nestjs-modules/mailer';
-import { sendEmailProducerService } from 'src/jobs/sendEmail-producer.service';
+import { sendEmailProducerService } from 'src/jobs/mail/sendEmail-producer.service';
 
 @Controller('users')
 export class UsersController {

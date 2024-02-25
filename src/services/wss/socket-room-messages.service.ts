@@ -11,18 +11,28 @@ export class SocketMessageService {
         const message = await this.prismaService.messages.create({
             data: {
                 author: data.author,
-                content: data.payload,
+                content: data.content,
                 room:   data.room
             }
         })
+
+        return message
+    }
+
+    async findMessages(roomName: string) {
+        const messages = await this.prismaService.messages.findMany({
+            where: {
+                room: roomName
+            }
+        });
+
+        return messages;
     }
 
     async deleteMessage(data: MessageDto) {
         const message = await this.prismaService.messages.delete({
             where: {
-                author: data.author,
-                room: data.room,
-                content: data.payload
+                id: data.id
             }
         }) 
         return message

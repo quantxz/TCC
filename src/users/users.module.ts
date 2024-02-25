@@ -3,10 +3,10 @@ import { UserService } from './users.service';
 import { UsersController } from './users.controller';
 import { PrismaService } from 'src/services/configs/prisma.service';
 import { RedisService } from 'src/services/configs/redis.service';
-import { sendEmailProducerService } from 'src/jobs/sendEmail-producer.service';
+import { sendEmailProducerService } from 'src/jobs/mail/sendEmail-producer.service';
 import { BullModule } from '@nestjs/bull';
 import { MailerModule } from '@nestjs-modules/mailer';
-import { sendMailConsumer } from 'src/jobs/sendEmail-consumer';
+import { sendMailConsumer } from 'src/jobs/mail/sendEmail-consumer';
 @Module({
   controllers: [UsersController, ],
   imports: [
