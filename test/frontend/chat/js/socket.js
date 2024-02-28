@@ -6,6 +6,7 @@ const socket = io("http://localhost:3000", {
 });
 
 const button = document.querySelector(".submit")
+const private = document.querySelector(".private")
 
 const render = (author, message) => {
     const div = document.querySelector(".messages")
@@ -34,6 +35,17 @@ socket.on('all_messages', (messages) => {
       render(message.author, message.content);
     });
 });
+
+private.addEventListener("click", () => {
+    socket.emit("private message", {
+        content: "ta workando ?",
+        to: "zY51N70IEYyvkmJHAAAJ"
+    })
+})
+
+socket.on("private message", (data) => {
+    console.log(data)
+})
 
 // Receptor de mensagem do servidor
 socket.on("message", (data) => {
