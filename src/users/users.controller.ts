@@ -197,21 +197,21 @@ export class UsersController {
     }
   }
 
-  @Get('test')
-  async redisTest(@Res() res: Response) {
-    try {
-      const cacheUser = await this.userService.FindMany()
+  // @Get('test')
+  // async redisTest(@Res() res: Response) {
+  //   try {
+  //     const cacheUser = await this.userService.FindMany()
 
-      return res.status(200).json({
-        message: "retornando dados do usuario encontrado",
-        returnedData: cacheUser,
-      });
-    } catch (error) {
-      this.logger.error("Error in redis test operation: " + error)
-      return res.status(500).json({
-        message: 'Internal Server Error',
-        status: 500,
-      });
-    }
-  }
+  //     return res.status(200).json({
+  //       message: "retornando dados do usuario encontrado",
+  //       returnedData: cacheUser,
+  //     });
+  //   } catch (error) {
+  //     this.logger.error("Error in redis test operation: " + error)
+  //     return res.status(500).json({
+  //       message: 'Internal Server Error',
+  //       status: 500,
+  //     });
+  //   }
+  // }
 }

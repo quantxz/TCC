@@ -1,6 +1,7 @@
 import { MessageDto } from "src/socket/dto/wss/socket-room-messages.dto";
 import { PrismaService } from "../configs/prisma.service";
 import { Injectable } from "@nestjs/common";
+import { PrivateMessagesDTO } from "src/socket/dto/wss/socket-private-messages.dto";
 
 
 @Injectable()
@@ -13,6 +14,18 @@ export class SocketMessageService {
                 author: data.author,
                 content: data.content,
                 room:   data.room
+            }
+        })
+
+        return message
+    }
+    
+    async savePrivateMessage(data: PrivateMessagesDTO) {
+        const message = await this.prismaService.privateMessages.create({
+            data: {
+                author: data.author,
+                content: data.content,
+                to:   data.to
             }
         })
 

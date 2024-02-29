@@ -20,6 +20,7 @@ model User {
   password  String
   nickname  String    @unique
 
+  PrivateMessages PrivateMessages[]
   messages  Messages[]
   cpf       String?   @unique
   rg        String?   @unique
@@ -46,4 +47,15 @@ model Messages {
   creator       User        @relation(fields: [author], references: [nickname])
   
   @@map("messages")
+}
+
+model PrivateMessages {
+  id            String      @default(uuid()) @id
+  author        String      
+  content       String
+  to            String
+
+  creator       User        @relation(fields: [author], references: [nickname])
+  
+  @@map("PrivateMessages")
 }

@@ -49,8 +49,6 @@ socket.on("private message", (data) => {
 
 // Receptor de mensagem do servidor
 socket.on("message", (data) => {
-    console.log({
-            message: `this is the ${data}`
-    });
+    console.log({ message: `this is the ${data}`} );
     render("room", data)
 });
