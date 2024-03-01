@@ -32,7 +32,7 @@ export class SocketGateway implements OnGatewayInit, OnGatewayConnection, OnGate
     this.server.to(roomName).emit('all_messages', messages);
   }
 
-  @SubscribeMessage("select_room")
+  @SubscribeMessage("select room")
   async selectRoom(roomName: string, client: Socket) {
     let room = await this.prismaService.chatRoom.findUnique({
       where: {
@@ -60,11 +60,12 @@ export class SocketGateway implements OnGatewayInit, OnGatewayConnection, OnGate
     this.messageJobService.insertMessage(data)
   }
 
-  @SubscribeMessage('private_message')
-  handlePrivateMessage(client: Socket, data): void {
-    client.join(data.room)
-    console.log(data)
-    this.server.to(data.room).emit("message", data.payload)
+  @SubscribeMessage('private message')
+  handlePrivateMessage(client: Socket, data: { to: string, content:  string }): void {
+    this.server.to(data.to).emit("private message", {
+        content: data.content,
+        from: client.id
+    })
   }
 
   //depois que a conexão websocket é iniciada
