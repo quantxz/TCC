@@ -9,7 +9,7 @@ body {
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
-    background-color: #111111e8;
+    background-color: #111111;
     overflow: hidden;
 }
 
@@ -32,6 +32,7 @@ body {
 
 .content > .messages {
     height: 77%;
+    overflow-y: scroll;
     padding: 10px;
 }
 

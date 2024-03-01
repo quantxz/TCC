@@ -51,17 +51,4 @@ socket.on("private message", (data) => {
 socket.on("message", (data) => {
     console.log({ message: `this is the ${data}`} );
     render("room", data)
-    div.scroll({
-        top: Math.floor(div.scrollHeight + 15),
-        behavior: "smooth"
-    })
-});
-document.addEventListener('DOMContentLoaded', function () {
-    var inputElement = document.querySelector('.content > input');
-
-    inputElement.addEventListener('input', function () {
-        // Ajusta a altura da caixa de texto conforme o conteúdo é digitado
-        this.style.height = 'auto';
-        this.style.height = (this.scrollHeight) + 'px';
-    });
 });
