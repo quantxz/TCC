@@ -7,6 +7,11 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model admin {
+  id String @id
+  @@map("admin")
+}
+
 model User {
   id        String    @default(uuid()) @id
   name      String  
@@ -15,6 +20,7 @@ model User {
   password  String
   nickname  String    @unique
 
+  PrivateMessages PrivateMessages[]
   messages  Messages[]
   cpf       String?   @unique
   rg        String?   @unique
@@ -41,4 +47,15 @@ model Messages {
   creator       User        @relation(fields: [author], references: [nickname])
   
   @@map("messages")
+}
+
+model PrivateMessages {
+  id            String      @default(uuid()) @id
+  author        String      
+  content       String
+  to            String
+
+  creator       User        @relation(fields: [author], references: [nickname])
+  
+  @@map("PrivateMessages")
 }

@@ -8,6 +8,7 @@ import { selectRoomDataDto } from './dto/room-data.dto';
 import { MessageDto } from './dto/wss/socket-room-messages.dto';
 import { insertMessageProducerService } from 'src/jobs/messages/insert-message-producer.service';
 import { SocketMessageService } from 'src/services/wss/socket-room-messages.service';
+import { PrivateMessagesDTO } from './dto/wss/socket-private-messages.dto';
 
 
 
@@ -57,15 +58,25 @@ export class SocketGateway implements OnGatewayInit, OnGatewayConnection, OnGate
   @SubscribeMessage('message')
   async handleMessage(client: Socket, data: MessageDto): Promise<void> {
     this.server.to(data.room).emit("message", data.content)
+
     this.messageJobService.insertMessage(data)
   }
 
   @SubscribeMessage('private message')
+<<<<<<< HEAD
   handlePrivateMessage(client: Socket, data: { to: string, content:  string }): void {
+=======
+  async handlePrivateMessage(client: Socket, data: PrivateMessagesDTO): Promise<void> {
+>>>>>>> updates
     this.server.to(data.to).emit("private message", {
         content: data.content,
         from: client.id
     })
+<<<<<<< HEAD
+=======
+
+    await this.messageJobService.insertPrivateMessage(data)
+>>>>>>> updates
   }
 
   //depois que a conexão websocket é iniciada

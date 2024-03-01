@@ -9,7 +9,7 @@ import { InvalidTypeException, UserNotFoundException } from '../errs/exceptions'
 @Injectable()
 export class UserService {
   private logger: Logger = new Logger('UsersServices');
-  constructor(private readonly prismaService: PrismaService, private readonly redisService: RedisService) { }
+  constructor(private readonly prismaService: PrismaService) { }
 
   async create(createUserDto: CreateUserDto) {
     try {
@@ -177,26 +177,26 @@ export class UserService {
     }
   }
 
-  async FindMany() {
-    try {
-      const cachedUsers = await this.redisService.get('users');
+  // async FindMany() {
+  //   try {
+  //     const cachedUsers = await this.redisService.get('users');
 
-      if (!cachedUsers) {
-        const users = await this.prismaService.user.findMany();
+  //     if (!cachedUsers) {
+  //       const users = await this.prismaService.user.findMany();
 
-        await this.redisService.set('users', JSON.stringify(users), 'EX', 15)
-        console.log('\x1b[36m%s\x1b[0m', 'FROM PRISMA')
-        return users
-      }
+  //       await this.redisService.set('users', JSON.stringify(users), 'EX', 15)
+  //       console.log('\x1b[36m%s\x1b[0m', 'FROM PRISMA')
+  //       return users
+  //     }
 
-      console.log('\x1b[36m%s\x1b[0m', 'FROM CACHE')
+  //     console.log('\x1b[36m%s\x1b[0m', 'FROM CACHE')
 
-      return JSON.parse(cachedUsers);
-    } catch (error) {
-      this.logger.error("Erro durante a procura pelo usuario no redis: " + error)
-      throw new Error("Erro durante a procura pelo usuario no redis: " + error)
-    }
-  }
+  //     return JSON.parse(cachedUsers);
+  //   } catch (error) {
+  //     this.logger.error("Erro durante a procura pelo usuario no redis: " + error)
+  //     throw new Error("Erro durante a procura pelo usuario no redis: " + error)
+  //   }
+  // }
 
   async findByNickname(nickname: string) {
     try {

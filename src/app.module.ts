@@ -1,5 +1,5 @@
 import { InjectQueue } from '@nestjs/bull';
-import { Module } from '@nestjs/common';
+import { Module, NestModule } from '@nestjs/common';
 import { UsersModule } from './users/users.module';
 import { SocketGateway } from './socket/socket.gateway';
 import { PrismaService } from './services/configs/prisma.service';
@@ -14,6 +14,12 @@ import { Queue } from 'bull';
 import { MiddlewareBuilder } from '@nestjs/core';
 import { createBullBoard } from 'bull-board';
 import { BullAdapter } from "bull-board/bullAdapter"
+import { TokenController } from './auth/tokens/token.controller';
+import { FakeDataBase } from './auth/entitys/db';
+import { TokenGenerator } from './auth/tokens/token-gen';
+import { AuthMiddleware } from './auth/middleware/AuthMiddleware';
+import { UsersController } from './users/users.controller';
+import { TokenAuthentication } from './auth/middleware/TokenAuthentication';
 
 @Module({
   imports: [
@@ -41,17 +47,29 @@ import { BullAdapter } from "bull-board/bullAdapter"
       name: "insert-message"
     })
   ],
-  controllers: [],
-  providers: [SocketGateway, SocketRoomService, PrismaService, sendEmailProducerService, insertMessageProducerService,insertMessageConsumer, SocketMessageService],
+  controllers: [TokenController],
+  providers: [
+    SocketGateway, 
+    SocketRoomService, 
+    PrismaService,  
+    sendEmailProducerService, 
+    insertMessageProducerService,
+    insertMessageConsumer, 
+    SocketMessageService,
+    FakeDataBase,
+    TokenGenerator,
+    TokenAuthentication
+  ],
 })
-export class AppModule {
-  constructor(@InjectQueue('insert-message') private queue: Queue) { }
-
+export class AppModule implements NestModule {
+  constructor(@InjectQueue('insert-message') private messagesQueue: Queue, @InjectQueue('mail-Queue') private sendMailQeue: Queue) { }
   configure(consumer: MiddlewareBuilder) {
     const { router } = createBullBoard([
-      new BullAdapter(this.queue)
+      new BullAdapter(this.messagesQueue),
+      new BullAdapter(this.sendMailQeue)
     ])
 
     consumer.apply(router).forRoutes("/admin/queues/messages")
+    consumer.apply(AuthMiddleware).forRoutes(UsersController);
   }
 } 
