@@ -9,7 +9,7 @@ body {
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
-    background-color: #111111;
+    background-color: #434963;
     overflow: hidden;
 }
 
@@ -21,7 +21,7 @@ body {
     right: 0rem;
     background-color: #3069db;
     border-radius: 5px;
-    box-shadow: 0 2px 10px 0 rgba(0, 0, 0, 0.2);
+    box-shadow: 0 2px 10px 0 rgba(6, 10, 24, 0.2);
     display: flex;
     flex-direction: column;
 }
@@ -31,7 +31,7 @@ body {
 }
 
 .content > .messages {
-    height: 77%;
+    flex: 1; /* Faz com que a área de mensagens ocupe o espaço restante */
     overflow-y: scroll;
     padding: 10px;
 }
@@ -41,14 +41,12 @@ body {
     position: relative;
     margin-left: 1rem;
     width: 95%;
-
     display: flex;
     align-items: flex-start;
 }
 
 .message-content {
     word-wrap: break-word;
-    
     border-radius: 50px;
 }
 
@@ -61,16 +59,19 @@ body {
 
 .input-container {
     display: flex;
+    width: 100%; /* Ajusta a largura para ocupar o espaço total disponível */
+    margin-top: 10px;
 }
 
 .content > input {
-    flex: 1; /* Ocupa todo o espaço disponível */
+    flex: 0; /* Ocupa todo o espaço disponível */
     margin-top: 10px;
     padding: 10px; /* Adiciona algum preenchimento para tornar a caixa de texto mais amigável */
+    border-radius: 50px;
 }
 
 .submit {
     width: 50px; /* Ajuste o tamanho conforme necessário */
-    margin-top: 10px;
     margin-left: 5px; /* Espaçamento entre a entrada e o botão */
+    border-radius: 50px;
 }
