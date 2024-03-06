@@ -8,12 +8,12 @@ import { plainToClass } from 'class-transformer';
 import { validate } from 'class-validator';
 import { LoginUserDto } from './dto/login-user.dto';
 import { MailerService } from '@nestjs-modules/mailer';
-import { sendEmailProducerService } from 'src/jobs/mail/sendEmail-producer.service';
+import { sendEmailProducerService } from '../jobs/mail/sendEmail-producer.service';
 
 @Controller('users')
 export class UsersController {
   private logger: Logger = new Logger('UsersController');
-  constructor(private readonly userService: UserService, private readonly mailService: sendEmailProducerService) {  }
+  constructor(private readonly userService: UserService, private readonly mailService: sendEmailProducerService) { }
 
   @Post('register')
   public async create(@Body() createUserDto: CreateUserDto, @Res() res: Response) {
@@ -30,12 +30,30 @@ export class UsersController {
         return res.status(400).json({ message: 'Erro de validação', errors });
       }
 
+      //confere se não existe um usuario com tal email no banco de dados
+      const [userEmailFinder, userNicknameFinder] = await Promise.all(
+        [
+          await this.userService.findUnique("email", userDtoInstance),
+          await this.userService.findUnique("nickname", userDtoInstance)
+        ]
+      )
+
+      if (userEmailFinder) {
+        return res.status(400).json({
+          message: "email ja cadastrado"
+        })
+      } else if (userNicknameFinder) {
+        return res.status(400).json({
+          message: "nickname ja cadastrado"
+        })
+      }
+
       // Se não houver erros, continue com a lógica do seu controlador
       const user = await this.userService.create(userDtoInstance);
 
       //envia o email para o usuario
       this.mailService.sendMail(createUserDto)
-      
+
       return res.status(201).json({
         message: 'Usuário criado',
         returnedData: user,
@@ -92,14 +110,21 @@ export class UsersController {
         return res.status(400).json({ message: 'Erro de validação', errors });
       }
 
-      // Se não houver erros, continue com a lógica do seu controlador
+      // Se não houver erros, continue com a lógica
       const user = await this.userService.findOne(userDtoInstance);
-
-      return res.status(200).json({
-        message: 'retornando dados do usuario achado',
-        status: 200,
-        returnedData: user,
-      });
+      if (user) {
+        return res.status(200).json({
+          message: 'retornando dados do usuario achado',
+          status: 200,
+          returnedData: user,
+        });
+      } else {
+        return res.status(400).json({
+          message: 'dados do usuario incorretos',
+          status: 400,
+          returnedData: user,
+        });
+      }
 
     } catch (error) {
       this.logger.error("Error in login user operation: " + error)
@@ -116,7 +141,7 @@ export class UsersController {
     try {
       const user = await this.userService.findByNickname(nickname);
 
-      if(user) {
+      if (user) {
         return res.status(200).json({
           message: "retornando dados do usuario encontrado",
           returnedData: user,
@@ -142,10 +167,10 @@ export class UsersController {
   async update(@Query('type') type: string, @Body() updateUserDto: UpdateUserDto, @Res() res: Response) {
     try {
       if (['email', 'password', 'nickname'].includes(type)) {
-        
+
         const userDtoInstance = plainToClass(UpdateUserDto, updateUserDto);
 
-        
+
         const errors = await validate(userDtoInstance);
 
         if (errors.length > 0) {
@@ -175,7 +200,7 @@ export class UsersController {
     try {
 
       const userDtoInstace = plainToClass(UserDto, userDto)
-
+      
       const errors = await validate(userDtoInstace)
 
       if (errors.length > 0) {
