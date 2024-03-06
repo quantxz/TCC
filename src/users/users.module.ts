@@ -5,8 +5,9 @@ import { PrismaService } from 'src/services/configs/prisma.service';
 import { RedisService } from 'src/services/configs/redis.service';
 import { sendEmailProducerService } from 'src/jobs/mail/sendEmail-producer.service';
 import { BullModule } from '@nestjs/bull';
-import { MailerModule } from '@nestjs-modules/mailer';
+import { MailerModule, MailerService } from '@nestjs-modules/mailer';
 import { sendMailConsumer } from 'src/jobs/mail/sendEmail-consumer';
+import { emailBodyRender } from 'src/jobs/mail/body/html-body';
 @Module({
   controllers: [UsersController, ],
   imports: [
@@ -30,10 +31,6 @@ import { sendMailConsumer } from 'src/jobs/mail/sendEmail-consumer';
       name: "mail-Queue"
     })
   ],
-<<<<<<< HEAD
-  providers: [UserService, PrismaService, RedisService, sendEmailProducerService, sendMailConsumer],
-=======
   providers: [UserService,  PrismaService, sendEmailProducerService, sendMailConsumer],
->>>>>>> updates
 })
 export class UsersModule {}

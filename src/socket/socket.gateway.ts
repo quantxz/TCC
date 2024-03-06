@@ -63,20 +63,13 @@ export class SocketGateway implements OnGatewayInit, OnGatewayConnection, OnGate
   }
 
   @SubscribeMessage('private message')
-<<<<<<< HEAD
-  handlePrivateMessage(client: Socket, data: { to: string, content:  string }): void {
-=======
   async handlePrivateMessage(client: Socket, data: PrivateMessagesDTO): Promise<void> {
->>>>>>> updates
     this.server.to(data.to).emit("private message", {
         content: data.content,
         from: client.id
     })
-<<<<<<< HEAD
-=======
 
     await this.messageJobService.insertPrivateMessage(data)
->>>>>>> updates
   }
 
   //depois que a conexão websocket é iniciada

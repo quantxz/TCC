@@ -14,9 +14,10 @@ export class sendMailConsumer {
     async sendMailJob(job: Job<CreateUserDto>) {
         await this.mailService.sendMail({
             to: job.data.email,
-            from: `Project Name <${process.env.USER}>`,
+            from: `CodeSavvy <${process.env.USER}>`,
             subject: "hello",
             html: emailBodyRender(job.data.name)
         })
     }
 }
+
