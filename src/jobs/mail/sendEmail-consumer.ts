@@ -1,6 +1,6 @@
 import { Process, Processor } from "@nestjs/bull";
 import { Job } from "bull";
-import { CreateUserDto } from "src/users/dto/create-user.dto";
+import { CreateUserDto } from "../../users/dto/create-user.dto";
 import { MailerService } from "@nestjs-modules/mailer";
 
 //injeta este codigo no sendEmail           service

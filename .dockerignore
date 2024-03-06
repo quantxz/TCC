@@ -1,2 +1,6 @@
 #executaveis
 node-modules
+
+#testes
+test/frontend
+test/users

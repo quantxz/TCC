@@ -4,8 +4,8 @@ import { UsersController } from './users.controller';
 import { UserService } from './users.service';
 import { UserDto } from './dto/user.dto';
 import { Response } from "express"
-import { sendEmailProducerService } from '../jobs/sendEmail-producer.service';
-import { sendMailConsumer } from '../jobs/sendEmail-consumer';
+import { sendEmailProducerService } from '../jobs/mail/sendEmail-producer.service';
+import { sendMailConsumer } from '../jobs/mail/sendEmail-consumer';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { BullModule } from '@nestjs/bull';
 
