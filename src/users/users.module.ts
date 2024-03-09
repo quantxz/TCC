@@ -1,12 +1,13 @@
 import { Module } from '@nestjs/common';
 import { UserService } from './users.service';
 import { UsersController } from './users.controller';
-import { PrismaService } from 'src/services/configs/prisma.service';
-import { RedisService } from 'src/services/configs/redis.service';
-import { sendEmailProducerService } from 'src/jobs/mail/sendEmail-producer.service';
+import { PrismaService } from '../services/configs/prisma.service';
+import { RedisService } from '../services/configs/redis.service';
+import { sendEmailProducerService } from '../jobs/mail/sendEmail-producer.service';
 import { BullModule } from '@nestjs/bull';
-import { MailerModule } from '@nestjs-modules/mailer';
-import { sendMailConsumer } from 'src/jobs/mail/sendEmail-consumer';
+import { MailerModule, MailerService } from '@nestjs-modules/mailer';
+import { sendMailConsumer } from '../jobs/mail/sendEmail-consumer';
+import { emailBodyRender } from '../jobs/mail/body/html-body';
 @Module({
   controllers: [UsersController, ],
   imports: [

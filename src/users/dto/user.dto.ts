@@ -15,10 +15,10 @@ export class UserDto {
     @IsString( { message: "Email deve ser uma string" } )
     readonly email:     string;
 
-    @IsString({ message: "Password deve ser uma string" })
+    @IsString({ message: "a senha deve ser uma string" })
     @MinLength(7, { message: "O tamanho minimo de caracteres para a senha é 7" })
     @MaxLength(55, { message: "O tamanho maximo de caracteres para a senha é 55" })
-    @Matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$/, { message: 'Senha inválida' })
+    @Matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$/, { message: 'a senha deve conter uma letra maiuscula, uma letra minuscula e um caractere especial' })
     readonly password:  string;
     
     @IsString({ message: "Nickname deve ser uma string" })

@@ -1,11 +1,14 @@
-FROM node:14
+FROM node:alpine
 
 WORKDIR /usr/src/TCC
 
 # Copia todos os arquivos do diretório onde está o Dockerfile para o diretório dentro do contêiner
 COPY . .
 
-# Instalação das dependências do projeto
+# Instalação do pm2
+RUN npm install --quiet --no-optional --no-found --loglevel=error -g pm2
+
+# instalação das dependencias do projeto
 RUN npm install --quiet --no-optional --no-found --loglevel=error
 
 # Compilação do projeto
@@ -15,4 +18,4 @@ RUN npm run build
 EXPOSE 3000
 
 # Comando para iniciar a aplicação em modo de produção
-CMD ["npm", "run", "start:prod"]
+CMD ["pm2-runtime", "dist/main.js"]

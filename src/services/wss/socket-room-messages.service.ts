@@ -13,7 +13,8 @@ export class SocketMessageService {
             data: {
                 author: data.author,
                 content: data.content,
-                room:   data.room
+                room:   data.room,
+                hour:   data.hour
             }
         })
 

@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import * as bcrypt from 'bcrypt';
+import * as bcrypt from 'bcryptjs'; // Importe o bcryptjs
+import { AuthReturns } from 'src/types/auth-enum';
 
 @Injectable()
 export class FakeDataBase {
@@ -8,7 +9,7 @@ export class FakeDataBase {
 
     constructor() {
         this.#nickname = process.env.FAKE_DB_NICKNAME;
-        this.#password = bcrypt.hashSync(process.env.FAKE_DB_PASSWORD, 10)
+        this.#password = bcrypt.hashSync(process.env.FAKE_DB_PASSWORD, 10);
     }
 
     public async FindAdmin(data: { nickname: string, password: string }) {

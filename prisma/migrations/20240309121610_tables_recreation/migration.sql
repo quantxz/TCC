@@ -33,6 +33,7 @@ CREATE TABLE "messages" (
     "author" TEXT NOT NULL,
     "content" TEXT NOT NULL,
     "room" TEXT NOT NULL,
+    "hour" TEXT NOT NULL,
 
     CONSTRAINT "messages_pkey" PRIMARY KEY ("id")
 );

@@ -1,6 +1,8 @@
 generator client {
   provider = "prisma-client-js"
+  binaryTargets = ["native", "linux-musl-openssl-3.0.x"]
 }
+
 
 datasource db {
   provider = "postgres"       
@@ -42,6 +44,7 @@ model Messages {
   author        String      
   content       String
   room          String
+  hour          String
 
   roomSended    ChatRoom    @relation(fields: [room], references: [name])
   creator       User        @relation(fields: [author], references: [nickname])
