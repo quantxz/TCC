@@ -3,7 +3,7 @@ generator client {
 }
 
 datasource db {
-  provider = "mysql"       
+  provider = "sqlite"       
   url      = env("DATABASE_URL")
 }
 
@@ -42,6 +42,7 @@ model Messages {
   author        String      
   content       String
   room          String
+  hour          String
 
   roomSended    ChatRoom    @relation(fields: [room], references: [name])
   creator       User        @relation(fields: [author], references: [nickname])

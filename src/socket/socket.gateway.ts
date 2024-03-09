@@ -57,7 +57,10 @@ export class SocketGateway implements OnGatewayInit, OnGatewayConnection, OnGate
   //quando o cliente mandar uma mensagem com o tipo message este metodo sera chamado
   @SubscribeMessage('message')
   async handleMessage(client: Socket, data: MessageDto): Promise<void> {
-    this.server.to(data.room).emit("message", data.content)
+    this.server.to(data.room).emit("message", { 
+      content: data.content,
+      hour:   data.hour 
+    })
 
     this.messageJobService.insertMessage(data)
   }

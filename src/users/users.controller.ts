@@ -52,8 +52,9 @@ export class UsersController {
       const user = await this.userService.create(userDtoInstance);
 
       //envia o email para o usuario
+ 
       this.mailService.sendMail(createUserDto)
-
+ 
       return res.status(201).json({
         message: 'Usuário criado',
         returnedData: user,

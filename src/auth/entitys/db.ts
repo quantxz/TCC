@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
+import { AuthReturns } from 'src/types/auth-enum';
 
 @Injectable()
 export class FakeDataBase {
