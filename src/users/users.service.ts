@@ -43,6 +43,7 @@ export class UserService {
 
   async findOne(UserDto: UserDto) {
     try {
+
       const user: UserDto = await this.prismaService.user.findUnique({
         where: {
           nickname: UserDto.nickname,
@@ -50,7 +51,6 @@ export class UserService {
           password: UserDto.password
         }
       })
-
       if (user) {
         return user;
       } else {

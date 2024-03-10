@@ -20,7 +20,7 @@ import { TokenGenerator } from './auth/tokens/token-gen';
 import { AuthMiddleware } from './auth/middleware/AuthMiddleware';
 import { UsersController } from './users/users.controller';
 import { TokenAuthentication } from './auth/middleware/TokenAuthentication';
-
+import { CorsOptions } from 'cors';
 @Module({
   imports: [
     UsersModule,
