@@ -108,7 +108,7 @@ export class UsersController {
 
       if (errors.length > 0) {
         // Lida com os erros de validação aqui
-        return res.status(400).json({ message: 'Erro de validação', errors });
+        return res.status(400).json({ status: 400, message: 'Erro de validação', errors });
       }
 
       // Se não houver erros, continue com a lógica
@@ -131,7 +131,7 @@ export class UsersController {
       this.logger.error("Error in login user operation: " + error)
 
       return res.status(500).json({
-        message: 'Internal Server Error',
+        message: 'Usuario não encontrado email ou nickname incorretos',
         status: 500,
       });
     }
