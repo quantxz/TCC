@@ -20,6 +20,8 @@ import { TokenGenerator } from './auth/tokens/token-gen';
 import { AuthMiddleware } from './auth/middleware/AuthMiddleware';
 import { UsersController } from './users/users.controller';
 import { TokenAuthentication } from './auth/middleware/TokenAuthentication';
+import { PostsModule } from './posts/posts.module';
+import { UploadsModule } from './modules/uploads/uploads.module';
 
 @Module({
   imports: [
@@ -45,7 +47,9 @@ import { TokenAuthentication } from './auth/middleware/TokenAuthentication';
     }),
     BullModule.registerQueue({
       name: "insert-message"
-    })
+    }),
+    PostsModule,
+    UploadsModule
   ],
   controllers: [TokenController],
   providers: [
