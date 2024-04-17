@@ -37,3 +37,6 @@ lerna-debug.log*
 # Services tests
 /src/services/configs/mail.service.ts
 /src/services/workers/workers-email.ts
+
+# Statics Folders
+static/posts-images
