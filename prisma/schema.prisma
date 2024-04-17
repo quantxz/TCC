@@ -22,6 +22,7 @@ model User {
 
   PrivateMessages PrivateMessages[]
   messages  Messages[]
+  posts     Posts[]
   cpf       String?   @unique
   rg        String?   @unique
 
@@ -59,4 +60,15 @@ model PrivateMessages {
   creator       User        @relation(fields: [author], references: [nickname])
   
   @@map("PrivateMessages")
+}
+
+model Posts {
+  id            String  @default(uuid()) @id
+  title         String
+  content       String
+  author        String 
+  shippingTime  DateTime
+
+  creator User    @relation(fields: [title], references: [nickname])
+  @@map("posts")
 }

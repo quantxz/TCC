@@ -21,7 +21,9 @@ import { AuthMiddleware } from './auth/middleware/AuthMiddleware';
 import { UsersController } from './users/users.controller';
 import { TokenAuthentication } from './auth/middleware/TokenAuthentication';
 import { PostsModule } from './posts/posts.module';
-import { UploadsModule } from './modules/uploads/uploads.module';
+import { UploadsModule } from './files configurers/uploads/uploads.module';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { join } from 'path';
 
 @Module({
   imports: [
@@ -47,6 +49,10 @@ import { UploadsModule } from './modules/uploads/uploads.module';
     }),
     BullModule.registerQueue({
       name: "insert-message"
+    }),
+    ServeStaticModule.forRoot({
+      serveRoot: '/static/posts-images', // Rota para acessar os arquivos estáticos no navegador
+      rootPath: join(__dirname, '..',  'static', 'posts-images'), // Diretório raiz para servir arquivos estáticos
     }),
     PostsModule,
     UploadsModule
