@@ -7,8 +7,8 @@ export class PostsService {
 
   constructor(private readonly prismaService: PrismaService) { }
 
-  create(postDto: CreatePostDto) {
-    const post = this.prismaService.posts.create({
+  async create(postDto: CreatePostDto) {
+    const post = await this.prismaService.posts.create({
       data: {
         title: postDto.title,
         content: postDto.content,
@@ -20,8 +20,8 @@ export class PostsService {
     return post
   }
 
-  findAll() {
-    const post = this.prismaService.posts.findMany();
+  async findAll() {
+    const post = await this.prismaService.posts.findMany();
 
     return post
   }
@@ -36,10 +36,6 @@ export class PostsService {
     return post
 
   }
-
-  // update() {
-  //   return `This action updates a #${id} post`;
-  // }
 
   async remove(postDto: CreatePostDto) {
     const post = await this.prismaService.posts.findFirst({

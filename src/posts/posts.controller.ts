@@ -4,8 +4,10 @@ import { PostsService } from './posts.service';
 import { CreatePostDto } from './dto/create-post.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { FileDto } from 'file-manager-3ds/dist/types/file-type';
+import { CommentsService } from './comments.service';
+import { CommentDto } from './dto/create-comment.dto';
 
-
+//c364db75-1dfb-42e7-a697-30ddc3da7a0d
 /*
   create ✔
   findAll ✔
@@ -15,7 +17,11 @@ import { FileDto } from 'file-manager-3ds/dist/types/file-type';
 */
 @Controller('posts')
 export class PostsController {
-  constructor(private readonly postsService: PostsService, private readonly uploadsService: UploadsService) { }
+  constructor(
+    private readonly postsService: PostsService,
+    private readonly uploadsService: UploadsService,
+    private readonly commentsService: CommentsService
+  ) { }
   public date = new Date();
 
   @Post('create')
@@ -26,7 +32,7 @@ export class PostsController {
 
       if (file) {
         const result = await this.uploadsService.filePipe(file);
-        const postImageUrl = `${this.uploadsService.folderPath + "/" + result}`;
+        const postImageUrl = `${this.uploadsService.folderPostsPath + "/" + result}`;
 
         const postDtoWithImage: CreatePostDto = {
           title: postDto.title,
@@ -64,7 +70,7 @@ export class PostsController {
 
   @Get('find-posts-of-author/:author')
   findOne(@Param('author') author: string) {
-    if(author) {
+    if (author) {
       return this.postsService.findPostsOfAuthor(author);
     } else {
       throw new BadRequestException("O parâmetro de consulta 'author' é necessário");
@@ -79,5 +85,29 @@ export class PostsController {
   @Delete('delete')
   remove(@Body() postDto: CreatePostDto) {
     return this.postsService.remove(postDto);
+  }
+
+  @Post('comment')
+  @UseInterceptors(FileInterceptor("file"))
+  async comment(@Body() commentDto: CommentDto, @UploadedFile() file: FileDto) {
+    if (file) {
+      const result = await this.uploadsService.filePipe<"Comment">(file, "Comment");
+      const commentImageUrl = `${this.uploadsService.folderCommentsPath + "/" + result}`;
+
+      const data: CommentDto = {
+        content: commentImageUrl,
+        authorNick: commentDto.authorNick,
+        postId: commentDto.postId   
+      }
+
+      const comment = await this.commentsService.create(data);
+
+      return comment;
+    } else {
+      const comment = await this.commentsService.create(commentDto);
+
+      return comment;
+    }
+
   }
 }
