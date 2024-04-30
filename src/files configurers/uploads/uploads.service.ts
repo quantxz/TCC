@@ -3,6 +3,7 @@ import { FileDto } from './dto/file-dto';
 import * as fs from 'fs-extra';
 import * as path from 'path';
 import * as crypto from 'crypto';
+import { stringify } from 'querystring';
 
 
 @Injectable()
@@ -19,9 +20,11 @@ export class UploadsService {
         return extension[extension.length - 1];
     }
 
-    async filePipe<T extends string>(file: FileDto, type?: T): Promise<string> {
+    async filePipe<T extends string>(file: FileDto): Promise<string> {
         const fileType = this.ReadExtension(file.originalname);
         const fileWeightInMb = file.size / (1024 * 1024);
+        //inferindo o valor de T no type
+        const type: T = null!;
 
         switch (type) {
             case "Comment":

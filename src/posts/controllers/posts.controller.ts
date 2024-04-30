@@ -1,13 +1,14 @@
-import { UploadsService } from './../files configurers/uploads/uploads.service';
+import { UploadsService } from '../../files configurers/uploads/uploads.service';
 import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors, UploadedFile, BadRequestException } from '@nestjs/common';
-import { PostsService } from './posts.service';
-import { CreatePostDto } from './dto/create-post.dto';
+import { PostsService } from '../services/posts.service';
+import { CreatePostDto } from '../dto/create-post.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { FileDto } from 'file-manager-3ds/dist/types/file-type';
-import { CommentsService } from './comments.service';
-import { CommentDto } from './dto/create-comment.dto';
+import { PostsAtributesService } from '../services/posts-atributes.service';
+import { CommentDto } from '../dto/posts-atributes.dto';
+import { PostsAtributes } from './posts-atributes.controller';
 
-//c364db75-1dfb-42e7-a697-30ddc3da7a0d
+
 /*
   create ✔
   findAll ✔
@@ -16,13 +17,14 @@ import { CommentDto } from './dto/create-comment.dto';
   delete ✔
 */
 @Controller('posts')
-export class PostsController {
+export class PostsController extends PostsAtributes {
   constructor(
     private readonly postsService: PostsService,
-    private readonly uploadsService: UploadsService,
-    private readonly commentsService: CommentsService
-  ) { }
-  public date = new Date();
+    readonly uploadsService: UploadsService,
+    readonly postsAtributesService: PostsAtributesService
+  ) {
+    super(postsAtributesService, uploadsService)
+  }
 
   @Post('create')
   @UseInterceptors(FileInterceptor('file'))
@@ -37,7 +39,6 @@ export class PostsController {
         const postDtoWithImage: CreatePostDto = {
           title: postDto.title,
           content: postImageUrl,
-          shippingTime: this.date,
           userNickname: postDto.userNickname
         }
 
@@ -49,7 +50,6 @@ export class PostsController {
         const postDtoWithoutImage: CreatePostDto = {
           title: postDto.title,
           content: postDto.content,
-          shippingTime: this.date,
           userNickname: postDto.userNickname
         }
 
@@ -65,15 +65,23 @@ export class PostsController {
 
   @Get('get-all')
   findAll() {
-    return this.postsService.findAll();
+    try {
+      return this.postsService.findAll();
+    } catch (error) {
+      throw new BadRequestException("o seguinte erro ocorreu: " + error);
+    }
   }
 
   @Get('find-posts-of-author/:author')
   findOne(@Param('author') author: string) {
-    if (author) {
-      return this.postsService.findPostsOfAuthor(author);
-    } else {
-      throw new BadRequestException("O parâmetro de consulta 'author' é necessário");
+    try {
+      if (author) {
+        return this.postsService.findPostsOfAuthor(author);
+      } else {
+        throw new BadRequestException("O parâmetro de consulta 'author' é necessário");
+      }
+    } catch (error) {
+      throw new BadRequestException("o seguinte erro ocorreu: " + error);
     }
   }
 
@@ -84,30 +92,10 @@ export class PostsController {
 
   @Delete('delete')
   remove(@Body() postDto: CreatePostDto) {
-    return this.postsService.remove(postDto);
-  }
-
-  @Post('comment')
-  @UseInterceptors(FileInterceptor("file"))
-  async comment(@Body() commentDto: CommentDto, @UploadedFile() file: FileDto) {
-    if (file) {
-      const result = await this.uploadsService.filePipe<"Comment">(file, "Comment");
-      const commentImageUrl = `${this.uploadsService.folderCommentsPath + "/" + result}`;
-
-      const data: CommentDto = {
-        content: commentImageUrl,
-        authorNick: commentDto.authorNick,
-        postId: commentDto.postId   
-      }
-
-      const comment = await this.commentsService.create(data);
-
-      return comment;
-    } else {
-      const comment = await this.commentsService.create(commentDto);
-
-      return comment;
+    try {
+      return this.postsService.remove(postDto);
+    } catch (error) {
+      throw new BadRequestException("o seguinte erro ocorreu: " + error);
     }
-
   }
 }

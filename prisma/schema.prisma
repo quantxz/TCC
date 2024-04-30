@@ -25,7 +25,6 @@ model User {
   messages        Messages[]
   posts           Posts[]
   comments        Comments[]
-  likes           Likes[]
 
   cpf String? @unique
   rg  String? @unique
@@ -67,45 +66,31 @@ model PrivateMessages {
 }
 
 model Posts {
-  id           String   @id @default(uuid())
-  title        String
-  content      String
-  author       String
-  type         String?  @default("post")
-  shippingTime DateTime
+  id        String      @id @default(uuid())
+  title     String
+  content   String
+  author    String
+  type      String?     @default("post")
+  createdAt DateTime    @default(now())
 
-  likes    Likes[]
+  likes    Int          @default(0)
   comments Comments[]
-  creator  User       @relation(fields: [author], references: [nickname])
+  creator  User         @relation(fields: [author], references: [nickname])
 
   @@map("posts")
 }
 
 model Comments {
-  id            String @id @default(uuid())
-  content       String
+  id          String    @id @default(uuid())
+  content     String
 
-  authorNick    String
-  author        User   @relation(fields: [authorNick], references: [nickname])
+  authorNick  String
+  author      User      @relation(fields: [authorNick], references: [nickname])
 
-  postId        String
-  post          Posts  @relation(fields: [postId], references: [id])
-
-  createdAt     DateTime @default(now())
+  postId      String
+  post        Posts     @relation(fields: [postId], references: [id])
+  likes       Int       @default(0)
+  createdAt   DateTime  @default(now())
 
   @@map("comments")
-}
-
-model Likes {
-  id            String @id @default(uuid())
-
-  post          Posts  @relation(fields: [postId], references: [id])
-  postId        String
-
-  userNick      String
-  user          User   @relation(fields: [userNick], references: [nickname])
-
-  createdAt     DateTime @default(now())
-
-  @@map("likes")
 }
