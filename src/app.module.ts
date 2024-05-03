@@ -30,11 +30,11 @@ import { join } from 'path';
     UsersModule,
     BullModule.forRoot({
       redis: {
-        host: 'localhost',
-        port: 6379,
+        host: 'redis',
+        port: 6379
       },
     }),
-    MailerModule.forRoot({
+    MailerModule.forRoot({ 
       transport: {
         host: process.env.MAIL_HOST,
         port: Number(process.env.MAIL_PORT),

@@ -1,0 +1,22 @@
+version: '3'
+
+services:
+  nestjs-app:
+    container_name: application
+    build: .
+    ports:
+      - '3000:3000'
+    depends_on:
+      - redis
+    networks:
+      - backend
+
+  redis:
+    container_name: redis
+    image: redis:latest
+    ports:
+      - '6379:6379'
+
+networks:
+  backend:
+    driver: bridge
