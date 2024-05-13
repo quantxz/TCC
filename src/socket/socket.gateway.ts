@@ -62,9 +62,9 @@ export class SocketGateway implements OnGatewayInit, OnGatewayConnection, OnGate
     this.messageJobService.insertMessage(data)
   }
 
-  @SubscribeMessage('private message')
+  @SubscribeMessage('private_message')
   async handlePrivateMessage(client: Socket, data: PrivateMessagesDTO): Promise<void> {
-    this.server.to(data.to).emit("private message", {
+    this.server.to(data.to).emit("private_message", {
         content: data.content,
         from: client.id
     })
