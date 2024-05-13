@@ -58,7 +58,7 @@ export class SocketGateway implements OnGatewayInit, OnGatewayConnection, OnGate
   @SubscribeMessage('message')
   async handleMessage(client: Socket, data: MessageDto): Promise<void> {
     this.server.to(data.room).emit("message", data)
-
+    console.log(data)
     this.messageJobService.insertMessage(data)
   }
 
