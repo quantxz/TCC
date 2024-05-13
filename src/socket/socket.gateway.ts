@@ -33,7 +33,7 @@ export class SocketGateway implements OnGatewayInit, OnGatewayConnection, OnGate
     this.server.to(roomName).emit('all_messages', messages);
   }
 
-  @SubscribeMessage("select room")
+  @SubscribeMessage("select_room")
   async selectRoom(roomName: string, client: Socket) {
     let room = await this.prismaService.chatRoom.findUnique({
       where: {
@@ -57,10 +57,7 @@ export class SocketGateway implements OnGatewayInit, OnGatewayConnection, OnGate
   //quando o cliente mandar uma mensagem com o tipo message este metodo sera chamado
   @SubscribeMessage('message')
   async handleMessage(client: Socket, data: MessageDto): Promise<void> {
-    this.server.to(data.room).emit("message", { 
-      content: data.content,
-      hour:   data.hour 
-    })
+    this.server.to(data.room).emit("message", data)
 
     this.messageJobService.insertMessage(data)
   }
