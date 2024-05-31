@@ -1,10 +1,11 @@
 import { UploadsService } from '../../files configurers/uploads/uploads.service';
-import { Post, Body, Patch, Param, Delete, UseInterceptors, UploadedFile, BadRequestException, Query } from '@nestjs/common';
+import { Post, Body, Patch, Param, Delete, UseInterceptors, UploadedFile, BadRequestException, Query, Res } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { FileDto } from 'file-manager-3ds/dist/types/file-type';
 import { CommentDto } from '../dto/posts-atributes.dto';
 import { PostsAtributesService } from '../services/posts-atributes.service';
 import { CreatePostDto } from '../dto/create-post.dto';
+import { Response } from 'express';
 
 export class PostsAtributes {
 
@@ -42,12 +43,34 @@ export class PostsAtributes {
   }
 
   @Patch('likes')
-  async like(@Body() DTO: CommentDto | CreatePostDto, @Query('type') type: string) {
+  async like(
+    @Body() dto: CreatePostDto, 
+    @Query('type') type: string, 
+    @Query('reqType') reqType: string,
+    @Res() res: Response  
+  ) {
     try {
-      const like = await this.postsAtributesService.like(type, DTO);
-      return like;
+
+      switch(reqType) {
+        case "like":
+          const like = await this.postsAtributesService.like(type, dto);
+          return res.status(200).json({
+            message: "post curtido"
+          });
+        case "unlike":
+          const unlike = await this.postsAtributesService.unlike(type, dto);
+          return res.status(200).json({
+            message: "like removido"
+          });
+        default:
+          return res.status(400).json({
+            error: "o tipo de requisição deve ser 'like' ou 'unlike'"
+          })
+      }
     } catch (error) {
-      throw new BadRequestException("o seguinte erro ocorreu: " + error);
+      return res.status(500).json({
+        error: "o seguinte erro ocorreu: " + error.message
+      });
     }
   }
 }

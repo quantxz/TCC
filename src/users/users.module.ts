@@ -13,7 +13,7 @@ import { emailBodyRender } from 'src/jobs/mail/body/html-body';
   imports: [
     BullModule.forRoot({
       redis: {
-        host: 'localhost',
+        host: 'redis',
         port: 6379,
       },
     }),

@@ -1,10 +1,8 @@
 import { Logger } from '@nestjs/common';
 import { OnGatewayConnection, OnGatewayDisconnect, OnGatewayInit, SubscribeMessage, WebSocketGateway, WebSocketServer } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
-import { RoomDto } from './dto/rooms.dto';
 import { PrismaService } from '../services/configs/prisma.service';
 import { UsersInRoomDto } from './dto/users-in-room.dto';
-import { selectRoomDataDto } from './dto/room-data.dto';
 import { MessageDto } from './dto/wss/socket-room-messages.dto';
 import { insertMessageProducerService } from 'src/jobs/messages/insert-message-producer.service';
 import { SocketMessageService } from 'src/services/wss/socket-room-messages.service';

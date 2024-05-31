@@ -25,24 +25,18 @@ export class PostsAtributesService {
         }
     }
 
-    async like<T extends { id?: string }>(enjoyWhat: string, DTO?: T) {
+    async like(likeWhat: string, dto: CreatePostDto) {
         try {
-
-            if (!DTO || !DTO.id) {
-                throw new Error("O parâmetro DTO ou DTO.id não pode ser nulo.");
-            }
-
-
             let currentLike;
 
-            switch (enjoyWhat) {
+            switch (likeWhat) {
                 case "Post":
                     currentLike = await this.prismaService.posts.findUnique({
-                        where: { id: DTO.id }
+                        where: { id: dto.id }
                     })
 
                     const post = await this.prismaService.posts.update({
-                        where: { id: DTO.id },
+                        where: { id: dto.id },
                         data: { likes: Math.round(currentLike.likes + 1) }
                     })
 
@@ -50,13 +44,50 @@ export class PostsAtributesService {
 
                 case "Comment":
                     currentLike = await this.prismaService.comments.findUnique({
-                        where: {
-                            id: DTO.id
-                        }
+                        where: { id: dto.id }
                     })
 
                     const comment = await this.prismaService.comments.update({
-                        where: { id: DTO.id },
+                        where: { id: dto.id },
+                        data: {
+                            likes: Math.round(currentLike.likes + 1)
+                        }
+                    })
+
+                    return comment
+                default:
+                    throw new Error("é nescessario passar um parametro valido")
+            }
+        } catch (error) {
+            this.logger.error(error)
+        }
+    }
+
+    async unlike(unlikeWhat: string, dto: CreatePostDto) {
+        try {
+
+            let currentLike;
+
+            switch (unlikeWhat) {
+                case "Post":
+                    currentLike = await this.prismaService.posts.findUnique({
+                        where: { id: dto.id }
+                    })
+
+                    const post = await this.prismaService.posts.update({
+                        where: { id: dto.id },
+                        data: { likes: Math.round(currentLike.likes - 1) }
+                    })
+
+                    return post
+
+                case "Comment":
+                    currentLike = await this.prismaService.comments.findUnique({
+                        where: { id: dto.id }
+                    })
+
+                    const comment = await this.prismaService.comments.update({
+                        where: { id: dto.id },
                         data: {
                             likes: Math.round(currentLike.likes + 1)
                         }

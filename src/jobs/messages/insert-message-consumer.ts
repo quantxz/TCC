@@ -4,7 +4,7 @@ import { SocketMessageService } from "src/services/wss/socket-room-messages.serv
 import { PrivateMessagesDTO } from "src/socket/dto/wss/socket-private-messages.dto";
 import { MessageDto } from "src/socket/dto/wss/socket-room-messages.dto";
 
-//injeta este codigo no sendEmail           service
+//injeta este codigo no sendEmailservice
 @Processor('insert-message')
 export class insertMessageConsumer {
     constructor(private messagesService: SocketMessageService) { }

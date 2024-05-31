@@ -48,6 +48,22 @@ export class PostsService {
 
   }
 
+  async findUnique(id: string) {
+    try {
+      const post = await this.prismaService.posts.findUnique({
+        where: { id: id }
+      })
+
+      if (!post) {
+        throw new Error('Post not found');
+      }
+
+      return post;
+    } catch (error) {
+      this.logger.error(error)
+    }
+  }
+
   async remove(postDto: CreatePostDto) {
     try {
       const post = await this.prismaService.posts.findFirst({

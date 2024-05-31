@@ -1,2 +1,6 @@
 #executaveis
 node_modules/
+
+#arquivos
+dockerfile
+docker-compose.yml

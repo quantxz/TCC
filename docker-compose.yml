@@ -9,14 +9,16 @@ services:
     depends_on:
       - redis
     networks:
-      - backend
+      - redisApplicationNetwork
 
   redis:
     container_name: redis
     image: redis:latest
     ports:
       - '6379:6379'
+    networks:
+    - redisApplicationNetwork
 
 networks:
-  backend:
+  redisApplicationNetwork:
     driver: bridge

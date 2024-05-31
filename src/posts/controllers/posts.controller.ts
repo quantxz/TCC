@@ -1,5 +1,5 @@
 import { UploadsService } from '../../files configurers/uploads/uploads.service';
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors, UploadedFile, BadRequestException } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Delete, UseInterceptors, UploadedFile, BadRequestException, Res } from '@nestjs/common';
 import { PostsService } from '../services/posts.service';
 import { CreatePostDto } from '../dto/create-post.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
@@ -7,6 +7,7 @@ import { FileDto } from 'file-manager-3ds/dist/types/file-type';
 import { PostsAtributesService } from '../services/posts-atributes.service';
 import { CommentDto } from '../dto/posts-atributes.dto';
 import { PostsAtributes } from './posts-atributes.controller';
+import { Response } from 'express';
 
 
 /*
@@ -28,7 +29,7 @@ export class PostsController extends PostsAtributes {
 
   @Post('create')
   @UseInterceptors(FileInterceptor('file'))
-  async create(@Body() postDto: Omit<CreatePostDto, "shippingTime">, @UploadedFile() file?: FileDto) {
+  async create(@Body() postDto: Omit<CreatePostDto, "shippingTime">, @Res() res: Response, @UploadedFile() file?: FileDto) {
 
     try {
 
@@ -44,7 +45,6 @@ export class PostsController extends PostsAtributes {
 
         const post = await this.postsService.create(postDtoWithImage);
 
-        return post;
       } else {
 
         const postDtoWithoutImage: CreatePostDto = {
@@ -55,10 +55,17 @@ export class PostsController extends PostsAtributes {
 
         const post = await this.postsService.create(postDtoWithoutImage);
 
-        return post;
       }
+      return res.status(200).json({
+        message: 'Requisição bem sucedida',
+        status: 200,
+      });
     } catch (error) {
-      throw new Error(`\nError finded:\n${error}\n`)
+    
+      return res.status(500).json({
+        message: 'Internal Server Error',
+        status: 500,
+      });
     }
 
   }
@@ -73,7 +80,7 @@ export class PostsController extends PostsAtributes {
   }
 
   @Get('find-posts-of-author/:author')
-  findOne(@Param('author') author: string) {
+  findByAuthor(@Param('author') author: string) {
     try {
       if (author) {
         return this.postsService.findPostsOfAuthor(author);
@@ -85,6 +92,14 @@ export class PostsController extends PostsAtributes {
     }
   }
 
+  @Get('post/:id')
+  findUnique(@Param('id') id: string) {
+    try {
+      return this.postsService.findUnique(id);
+    } catch (error) {
+      throw new BadRequestException("o seguinte erro ocorreu: " + error);
+    }
+  }
   // @Patch(':id')
   // update(@Param('id') id: string, @Body() updatePostDto: UpdatePostDto) {
   //   return this.postsService.update(+id, updatePostDto);
