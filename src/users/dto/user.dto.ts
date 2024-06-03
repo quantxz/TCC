@@ -2,12 +2,10 @@ import { IsString, IsEmail, MinLength, MaxLength, Matches, IsOptional, Length } 
 //class-validator para verificar se os canmpos passados são validos
 export class UserDto {
     @IsString({ message: "Name deve ser uma string" })
-    @MinLength(5, { message: "O tamanho minimo de caracteres para o nome é 5" })
     @MaxLength(35, { message: "O tamanho maximo de caracteres para o nome é 35" })
     readonly name:      string;
 
     @IsString({ message: "Surname deve ser uma string" })
-    @MinLength(2, { message: "O tamanho minimo de caracteres para o sobrenome é 2" })
     @MaxLength(55, { message: "O tamanho maximo de caracteres para o sobrenome é 55" })
     readonly surname:   string;
     

@@ -80,6 +80,6 @@ export class AppModule implements NestModule {
     ])
 
     consumer.apply(router).forRoutes("/admin/queues/messages")
-    consumer.apply(AuthMiddleware).forRoutes(UsersController);
+    // consumer.apply(AuthMiddleware).forRoutes(UsersController);
   }
 } 
