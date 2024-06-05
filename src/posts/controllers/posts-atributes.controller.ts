@@ -1,8 +1,8 @@
 import { UploadsService } from '../../files configurers/uploads/uploads.service';
-import { Post, Body, Patch, Param, Delete, UseInterceptors, UploadedFile, BadRequestException, Query, Res } from '@nestjs/common';
+import { Post, Body, Patch, Param, Delete, UseInterceptors, UploadedFile, BadRequestException, Query, Res, Get } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { FileDto } from 'file-manager-3ds/dist/types/file-type';
-import { CommentDto } from '../dto/posts-atributes.dto';
+import { CommentDto, LikedsPostsDto } from '../dto/posts-atributes.dto';
 import { PostsAtributesService } from '../services/posts-atributes.service';
 import { CreatePostDto } from '../dto/create-post.dto';
 import { Response } from 'express';
@@ -44,14 +44,14 @@ export class PostsAtributes {
 
   @Patch('likes')
   async like(
-    @Body() dto: CreatePostDto, 
-    @Query('type') type: string, 
+    @Body() dto: CreatePostDto,
+    @Query('type') type: string,
     @Query('reqType') reqType: string,
-    @Res() res: Response  
+    @Res() res: Response
   ) {
     try {
 
-      switch(reqType) {
+      switch (reqType) {
         case "like":
           const like = await this.postsAtributesService.like(type, dto);
           return res.status(200).json({
@@ -71,6 +71,50 @@ export class PostsAtributes {
       return res.status(500).json({
         error: "o seguinte erro ocorreu: " + error.message
       });
+    }
+  }
+
+  @Patch('likedPosts')
+  async updateLikedPosts(@Body() dto: LikedsPostsDto, @Query('type') type: string, @Res() res: Response) {
+    try {
+      const likedPost = await this.postsAtributesService.UpdatePostLiked(dto, type)
+
+      return res.status(200).json({
+        message: "like posts status updated",
+        status: 200,
+        postInfo: likedPost
+      })
+    } catch (error) {
+      return res.status(400).json({
+        message: "erro na soliçitação"
+      })
+    }
+  }
+
+  @Post('likedPosts')
+  async findLikedPosts(@Body() dto: LikedsPostsDto, @Res() res: Response) {
+    try {
+      const likedPost = await this.postsAtributesService.findUserPostLiked(dto)
+
+      if(likedPost) {
+        return res.status(200).json({
+          message: "returning user liked post",
+          status: 200,
+          postLiked: true,
+          postInfo: likedPost
+        })
+      } else {
+        return res.status(200).json({
+          message: "returning user liked post",
+          status: 200,
+          postStatus: false,
+          postInfo: likedPost
+        })
+      }
+    } catch (error) {
+      return res.status(400).json({
+        message: "erro na soliçitação"
+      })
     }
   }
 }

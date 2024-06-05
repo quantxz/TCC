@@ -1,5 +1,5 @@
 import { PrismaService } from "src/services/configs/prisma.service";
-import { CommentDto, LikeDto, LikeInCommentDto } from "../dto/posts-atributes.dto";
+import { CommentDto, LikeDto, LikeInCommentDto, LikedsPostsDto } from "../dto/posts-atributes.dto";
 import { Injectable, Logger } from "@nestjs/common";
 import { CreatePostDto } from "../dto/create-post.dto";
 import { Prisma } from "@prisma/client";
@@ -23,6 +23,47 @@ export class PostsAtributesService {
         } catch (error) {
             this.logger.error(error)
         }
+    }
+
+    async findUserPostLiked(data: LikedsPostsDto) {
+        const likedPost = await this.prismaService.likedsPosts.findFirst({
+            where: {
+                author: data.author,
+                postId: data.postId
+            }
+        });
+
+        if(likedPost) {
+            return true
+        } else {
+            return false
+        }
+
+    }
+
+    async UpdatePostLiked(data: LikedsPostsDto, type: string) {
+        switch(type) {
+            case "like":
+                const likedPost = await this.prismaService.likedsPosts.create({
+                    data: {
+                        author: data.author,
+                        postId: data.postId
+                    }
+                });
+        
+                return likedPost
+            case "unlike":
+                const unlikedPost = await this.prismaService.likedsPosts.delete({
+                    where: {
+                        id: data.id
+                    }
+                });
+        
+                return unlikedPost
+            default:
+                throw new Error("Tipo não permitido")
+        }
+
     }
 
     async like(likeWhat: string, dto: CreatePostDto) {

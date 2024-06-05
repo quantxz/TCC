@@ -25,6 +25,7 @@ model User {
   messages        Messages[]
   posts           Posts[]
   comments        Comments[]
+  likedPosts      LikedsPosts[]
 
   cpf String? @unique
   rg  String? @unique
@@ -75,9 +76,21 @@ model Posts {
 
   likes    Int          @default(0)
   comments Comments[]
+  likedsposts LikedsPosts[]
+
   creator  User         @relation(fields: [author], references: [nickname])
 
   @@map("posts")
+}
+
+model LikedsPosts {
+    id        String @default(uuid()) @id
+    author    String
+    postId    String
+
+    user User  @relation(fields: [author], references: [nickname])
+    post Posts @relation(fields: [postId], references: [id])
+    @@map("likedsPosts")
 }
 
 model Comments {

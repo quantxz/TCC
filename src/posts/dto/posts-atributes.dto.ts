@@ -9,7 +9,14 @@ export class LikeDto {
     public readonly userNick:   string;
     public readonly postId:     string;
 }
+
 export class LikeInCommentDto {
     public readonly userNick:   string;
     public readonly commentId:     string;
+}
+
+export class LikedsPostsDto {
+    public readonly id?:        string
+    public readonly author:    string
+    public readonly postId:    string
 }
