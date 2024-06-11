@@ -33,15 +33,18 @@ export class PostsAtributesService {
             }
         });
 
-        if(likedPost) {
-            return true
-        } else {
-            return false
-        }
-
+        return {
+            booleanValue: !!likedPost,
+            likedPostMetadata: likedPost || {
+                id: null,
+                author: null,
+                postId: null
+            }
+        };
     }
 
     async UpdatePostLiked(data: LikedsPostsDto, type: string) {
+
         switch(type) {
             case "like":
                 const likedPost = await this.prismaService.likedsPosts.create({

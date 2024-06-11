@@ -8,6 +8,8 @@ import { PostsAtributesService } from '../services/posts-atributes.service';
 import { CommentDto } from '../dto/posts-atributes.dto';
 import { PostsAtributes } from './posts-atributes.controller';
 import { Response } from 'express';
+import { Posts } from '@prisma/client';
+import { PostDto } from '../dto/post.dto';
 
 
 /*
@@ -30,7 +32,7 @@ export class PostsController extends PostsAtributes {
   @Post('create')
   @UseInterceptors(FileInterceptor('file'))
   async create(@Body() postDto: Omit<CreatePostDto, "shippingTime">, @Res() res: Response, @UploadedFile() file?: FileDto) {
-
+    console.log(postDto)
     try {
 
       if (file) {
@@ -61,7 +63,7 @@ export class PostsController extends PostsAtributes {
         status: 200,
       });
     } catch (error) {
-    
+
       return res.status(500).json({
         message: 'Internal Server Error',
         status: 500,
@@ -71,11 +73,31 @@ export class PostsController extends PostsAtributes {
   }
 
   @Get('get-all')
-  findAll() {
+  async findAll(@Res() res: Response) {
     try {
-      return this.postsService.findAll();
+      const posts = await this.postsService.findAll();
+
+      // If postsService.findAll() returns an array of posts
+      const postsAttributesPromises = posts.map(async (post) => {
+        const obj = {
+          author: post.author,
+          postId: post.id
+        };
+        return await this.postsAtributesService.findUserPostLiked(obj);
+      });
+
+      const postsAttributes = await Promise.all(postsAttributesPromises);
+
+      // You can modify the posts array to include the attributes if needed
+      const postsWithAttributes = posts.map((post, index) => ({
+        ...post,
+        attributes: postsAttributes[index]
+      }));
+
+      return res.status(200).json(postsWithAttributes); // Properly using the response object
     } catch (error) {
-      throw new BadRequestException("o seguinte erro ocorreu: " + error);
+      console.error("An error occurred:", error); // Logging the error for debugging
+      throw new BadRequestException("An error occurred: " + error.message); // Providing a meaningful error message
     }
   }
 

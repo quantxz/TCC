@@ -50,7 +50,6 @@ export class PostsAtributes {
     @Res() res: Response
   ) {
     try {
-
       switch (reqType) {
         case "like":
           const like = await this.postsAtributesService.like(type, dto);
@@ -76,6 +75,7 @@ export class PostsAtributes {
 
   @Patch('likedPosts')
   async updateLikedPosts(@Body() dto: LikedsPostsDto, @Query('type') type: string, @Res() res: Response) {
+    console.log(dto)
     try {
       const likedPost = await this.postsAtributesService.UpdatePostLiked(dto, type)
 
