@@ -61,7 +61,7 @@ export class PostsAtributesService {
                         id: data.id
                     }
                 });
-                console.log("LIkedpost Deletado")
+
                 return unlikedPost
             default:
                 throw new Error("Tipo não permitido")
