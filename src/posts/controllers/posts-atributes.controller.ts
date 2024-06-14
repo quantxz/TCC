@@ -12,12 +12,12 @@ export class PostsAtributes {
   constructor(
     protected readonly postsAtributesService: PostsAtributesService,
     protected readonly uploadsService: UploadsService
-  ) { }
+  ) {}
 
   @Post('comments')
   @UseInterceptors(FileInterceptor("file"))
   async comment(@Body() commentDto: CommentDto, @UploadedFile() file: FileDto) {
-    try {
+    try { 
       if (file) {
         const result = await this.uploadsService.filePipe<"Comment">(file);
         const commentImageUrl = `${this.uploadsService.folderCommentsPath + "/" + result}`;
@@ -75,10 +75,10 @@ export class PostsAtributes {
 
   @Patch('likedPosts')
   async updateLikedPosts(@Body() dto: LikedsPostsDto, @Query('type') type: string, @Res() res: Response) {
-    console.log(dto)
+
     try {
       const likedPost = await this.postsAtributesService.UpdatePostLiked(dto, type)
-
+ 
       return res.status(200).json({
         message: "like posts status updated",
         status: 200,
@@ -96,7 +96,7 @@ export class PostsAtributes {
     try {
       const likedPost = await this.postsAtributesService.findUserPostLiked(dto)
 
-      if(likedPost) {
+      if(likedPost.booleanValue == true) {
         return res.status(200).json({
           message: "returning user liked post",
           status: 200,
@@ -107,7 +107,7 @@ export class PostsAtributes {
         return res.status(200).json({
           message: "returning user liked post",
           status: 200,
-          postStatus: false,
+          postLiked: false,
           postInfo: likedPost
         })
       }

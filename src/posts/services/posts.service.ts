@@ -12,7 +12,7 @@ export class PostsService {
       const post = await this.prismaService.posts.create({
         data: {
           title: postDto.title,
-          content: postDto.content,
+          content: postDto.content, 
           author: postDto.userNickname,
         }
       })
@@ -82,7 +82,7 @@ export class PostsService {
         where: {
           id: post.id
         }
-      })
+      }) 
 
       return postDeleted
     } catch (error) {

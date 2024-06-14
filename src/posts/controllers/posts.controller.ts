@@ -32,7 +32,7 @@ export class PostsController extends PostsAtributes {
   @Post('create')
   @UseInterceptors(FileInterceptor('file'))
   async create(@Body() postDto: Omit<CreatePostDto, "shippingTime">, @Res() res: Response, @UploadedFile() file?: FileDto) {
-    console.log(postDto)
+
     try {
 
       if (file) {
