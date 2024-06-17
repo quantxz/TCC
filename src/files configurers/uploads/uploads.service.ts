@@ -11,8 +11,11 @@ export class UploadsService {
     public folderPostsPath = path.join(__dirname, "..", "..", "..", "static", "posts-images");
     public folderCommentsPath = path.join(__dirname, "..", "..", "..", "static", "comments-images");
 
-    imageTypesList: string[] = ["jpg", "gif", "png", "svg", "webp", "raw", "tiff", "bmp", "pdf"]
-
+    imageTypesList: string[] = [
+        "jpg", "gif", "png", "svg", "webp", "raw", "tiff", "bmp", "pdf", "jpeg",
+        "heif", "heic", "indd", "ai", "psd", "eps", "dng", "cr2", "nef", "orf", "sr2"
+    ];
+    
     ReadExtension(fileName: string) {
         const originalName = fileName.toLowerCase()
         const extension: string[] = originalName.split(".");

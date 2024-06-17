@@ -34,10 +34,10 @@ export class PostsController extends PostsAtributes {
   async create(@Body() postDto: Omit<CreatePostDto, "shippingTime">, @Res() res: Response, @UploadedFile() file?: FileDto) {
 
     try {
-
       if (file) {
+
         const result = await this.uploadsService.filePipe(file);
-        const postImageUrl = `${this.uploadsService.folderPostsPath + "/" + result}`;
+        const postImageUrl = `${"http://localhost:3000/" + result}`;
 
         const postDtoWithImage: CreatePostDto = {
           title: postDto.title,
@@ -48,7 +48,8 @@ export class PostsController extends PostsAtributes {
         const post = await this.postsService.create(postDtoWithImage);
 
       } else {
-
+        console.log("postDto")
+        console.log(postDto) 
         const postDtoWithoutImage: CreatePostDto = {
           title: postDto.title,
           content: postDto.content,

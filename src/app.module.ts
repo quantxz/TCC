@@ -52,7 +52,8 @@ import { join } from 'path';
     }),
     ServeStaticModule.forRoot({
       serveRoot: '/static/posts-images', // Rota para acessar os arquivos estáticos no navegador
-      rootPath: join(__dirname, '..',  'static', 'posts-images'), // Diretório raiz para servir arquivos estáticos
+      rootPath: join(__dirname, '..',  'static', 'posts-images'),
+      renderPath: join(__dirname, '..',  'static', 'posts-images') // Diretório raiz para servir arquivos estáticos
     }),
     PostsModule,
     UploadsModule
