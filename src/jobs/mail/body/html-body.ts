@@ -104,7 +104,7 @@ export const emailBodyRender = (userName: string): string => {
                 </ul>
                 <p>Agradecemos por se juntar a nós. <br> Se você tiver alguma dúvida ou precisar de ajuda, não hesite em nos
                     contatar pelo email ou instagram: <br>
-                    <a href="mailto:suporteCodeSavvy@gmail.com?subject=Pedido%20de%20ajuda%20ao%suporte" target="_blank">suporteCodeSavvy@gmail.com</a>.
+                    <a href="mailto:suporteCodeSavvy@gmail.com?subject=Pedido%20de%20ajuda%20ao%20suporte" target="_blank">suporteCodeSavvy@gmail.com</a>.
                     <br>
                     <a href="https://www.instagram.com/CodeSavvyOficial" target="_blank"
                         rel="noopener noreferrer">@CodeSavvyOficial</a>.
