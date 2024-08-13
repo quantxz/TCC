@@ -20,10 +20,12 @@ export const emailBodyRender = (userName: string): string => {
                 padding: 0;
                 background-color: #f4f4f4;
                 font-size: 21px;
+                width: 98vw;
+                height: 98vh;
             }
     
             .container {
-                width: 60%;
+                width: 80%;
                 margin: 0 auto;
                 overflow: hidden;
                 border-radius: 10px;

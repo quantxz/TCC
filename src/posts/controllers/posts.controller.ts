@@ -8,7 +8,6 @@ import { PostsAtributesService } from '../services/posts-atributes.service';
 import { CommentDto } from '../dto/posts-atributes.dto';
 import { PostsAtributes } from './posts-atributes.controller';
 import { Response } from 'express';
-import { Posts } from '@prisma/client';
 import { PostDto } from '../dto/post.dto';
 
 

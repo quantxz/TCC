@@ -5,14 +5,21 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { UserDto } from './dto/user.dto';
 import { Body, Controller, Delete, Get, Logger, Param, Patch, Post, Query, Res } from '@nestjs/common';
 import { plainToClass } from 'class-transformer';
-import { validate } from 'class-validator';
+import { validate } from 'class-validator'; 
 import { LoginUserDto } from './dto/login-user.dto';
 import { sendEmailProducerService } from '../jobs/mail/sendEmail-producer.service';
+import { mailerManualService } from 'src/mail/mail.service';
+import { parentPort, Worker, workerData, isMainThread } from 'worker_threads';
 
 @Controller('users')
 export class UsersController {
   private logger: Logger = new Logger('UsersController');
-  constructor(private readonly userService: UserService, private readonly mailService: sendEmailProducerService) { }
+  constructor(
+    private readonly userService: UserService, 
+    private readonly mailService: sendEmailProducerService,
+    private readonly mailManualService: mailerManualService
+  ) { }
+
 
   @Post('register')
   public async create(@Body() createUserDto: CreateUserDto, @Res() res: Response) {
@@ -28,6 +35,9 @@ export class UsersController {
         // Lida com os erros de validação aqui
         return res.status(400).json({ message: 'Erro de validação', errors });
       }
+
+      //por algum motivo que eu não deveria precisar saber qual é a porra do redis não funciona em prod mesmo com o docker, e não to com tempo pra arruma isso agora
+      this.mailManualService.sendMail(createUserDto.email, createUserDto.name);
 
       //confere se não existe um usuario com tal email no banco de dados
       const [userEmailFinder, userNicknameFinder] = await Promise.all(

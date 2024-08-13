@@ -18,12 +18,13 @@ import { TokenController } from './auth/tokens/token.controller';
 import { FakeDataBase } from './auth/entitys/db';
 import { TokenGenerator } from './auth/tokens/token-gen';
 import { AuthMiddleware } from './auth/middleware/AuthMiddleware';
-import { UsersController } from './users/users.controller';
+import { UsersController } from './users/users.controller'; 
 import { TokenAuthentication } from './auth/middleware/TokenAuthentication';
 import { PostsModule } from './posts/posts.module';
 import { UploadsModule } from './files configurers/uploads/uploads.module';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
+import { mailerManualService } from './mail/mail.service';
 
 @Module({
   imports: [
@@ -69,7 +70,8 @@ import { join } from 'path';
     SocketMessageService,
     FakeDataBase,
     TokenGenerator,
-    TokenAuthentication
+    TokenAuthentication,
+    mailerManualService
   ],
 })
 export class AppModule implements NestModule {

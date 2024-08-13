@@ -8,6 +8,7 @@ import { BullModule } from '@nestjs/bull';
 import { MailerModule, MailerService } from '@nestjs-modules/mailer';
 import { sendMailConsumer } from 'src/jobs/mail/sendEmail-consumer';
 import { emailBodyRender } from 'src/jobs/mail/body/html-body';
+import { mailerManualService } from 'src/mail/mail.service';
 @Module({
   controllers: [UsersController, ],
   imports: [
@@ -31,6 +32,6 @@ import { emailBodyRender } from 'src/jobs/mail/body/html-body';
       name: "mail-Queue"
     })
   ],
-  providers: [UserService,  PrismaService, sendEmailProducerService, sendMailConsumer],
+  providers: [UserService,  PrismaService, sendEmailProducerService, sendMailConsumer, mailerManualService],
 })
 export class UsersModule {}

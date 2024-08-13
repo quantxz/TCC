@@ -8,7 +8,6 @@ import { emailBodyRender } from "./body/html-body";
 @Processor('mail-Queue')
 export class sendMailConsumer {
     constructor(private mailService: MailerService) { }
-  
  
     @Process('sendMail-Job')
     async sendMailJob(job: Job<CreateUserDto>) {
