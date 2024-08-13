@@ -56,11 +56,28 @@ export class SocketGateway implements OnGatewayInit, OnGatewayConnection, OnGate
   @SubscribeMessage('message')
   async handleMessage(client: Socket, data: MessageDto): Promise<void> {
     this.server.to(data.room).emit("message", { 
-      content: data.content,
+      content: data.content, 
       hour:   data.hour 
     })
 
-    this.messageJobService.insertMessage(data)
+    this.messageJobService.insertMessage(data);
+  }
+
+  @SubscribeMessage('save messages')
+  async saveMessages(client: Socket, data: MessageDto[]) {
+    const createPromises = data.map(message => 
+      this.prismaService.messages.create({
+        data: {
+          author: message.author,
+          content: message.content,
+          room: message.room,
+          hour: message.hour
+        }
+      })
+    );
+  
+    // Espera que todas as promessas sejam concluídas
+    await Promise.all(createPromises);
   }
 
   @SubscribeMessage('private message')
@@ -69,7 +86,6 @@ export class SocketGateway implements OnGatewayInit, OnGatewayConnection, OnGate
         content: data.content,
         from: client.id
     })
-
     await this.messageJobService.insertPrivateMessage(data)
   }
 
