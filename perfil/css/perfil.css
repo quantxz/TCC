@@ -1,0 +1,397 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #004e97;
+    overflow-x: hidden;
+}
+
+.profile-container {
+    position: absolute;
+    width: 100vw;
+    background: #fff;
+
+}
+
+.profile-header {
+    display: flex;
+    padding: 20px;
+    border-bottom: 1px solid #ddd;
+}
+
+.profile-picture {
+    margin-right: 20px;
+}
+
+.profile-picture img {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+
+
+}
+
+.FotoPerfil {
+    background-image: url(../assets/Sem\ foto.avif);
+    width: 150px;
+    height: 150px;
+    background-size: cover;
+    background-repeat: no-repeat;
+    display: flex;
+    align-items: center;
+    border-radius: 100px;
+    background-position: center;
+}
+
+.profile-info {
+    flex: 1;
+}
+
+.profile-info h1 {
+    margin: 0;
+    font-size: 28px;
+}
+
+.profile-info p {
+    margin: 5px 0;
+    color: #666;
+}
+
+.bio {
+    margin: 10px 0;
+    font-size: 16px;
+    color: #333;
+}
+
+.social-links a {
+    margin-right: 15px;
+    text-decoration: none;
+    color: #0095f6;
+}
+
+.social-links a:hover {
+    text-decoration: underline;
+}
+
+.profile-info button {
+    background: #0095f6;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+.profile-info button:hover {
+    background: #007bb5;
+}
+
+.profile-skills,
+.profile-projects,
+.profile-posts {
+    padding: 20px;
+    border-bottom: 1px solid #ddd;
+}
+
+.profile-skills ul {
+    list-style: none;
+    padding: 0;
+}
+
+.profile-skills li {
+    background: #faf4f4;
+    border-radius: 5px;
+    padding: 10px;
+    margin: 5px 0;
+
+
+}
+
+.profile-skills {
+
+    box-shadow: 5px 5px 0px#004e97;
+
+}
+
+
+.profile-projects .project-item,
+.profile-posts .post {
+    margin-bottom: 20px;
+}
+
+.project-item h3,
+.post h3 {
+    margin: 0;
+    font-size: 20px;
+}
+
+.project-item p,
+.post p {
+    color: #666;
+}
+
+.profile-projects {
+    box-shadow: 5px 5px 0px#004e97;
+}
+
+.project-item a,
+.post a {
+    color: #0095f6;
+    text-decoration: none;
+}
+
+.project-item a:hover,
+.post a:hover {
+    text-decoration: underline;
+}
+
+.post img {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+    object-fit: cover;
+}
+
+#Trade {
+    display: none;
+}
+
+.Conteiner-Perfil {
+    transition: 4.2s;
+    width: 100%;
+    height: 158%;
+    background-color: #0000005f;
+    position: absolute;
+    left: 0vh;
+    z-index: 1;
+    backdrop-filter: blur(5px);
+    display: none;
+}
+
+.edit-perfil {
+    background-color: #f2f2f2;
+    width: 50%;
+    height: 50%;
+    position: absolute;
+    top: 2vh;
+    left: 50vh;
+    display: flex;
+    flex-direction: column;
+    gap: 1vh;
+    border-radius: 10px;
+    margin: 2vh;
+}
+
+#Username {
+    width: 30%;
+    height: 5vh;
+    position: relative;
+    margin: 2vh;
+    box-shadow: 5px 5px 0px rgb(1, 255, 247);
+}
+
+#Name {
+    position: relative;
+    width: 30%;
+    height: 5vh;
+    margin: 2vh;
+    box-shadow: 5px 5px 0px rgb(2, 236, 244);
+}
+
+
+#Bio {
+    position: relative;
+    top: .2vh;
+    width: 94%;
+    height: 20%;
+    left: 2vh;
+}
+
+
+
+
+.title-Perfil {
+    text-align: center;
+    background-color: #00eaff3f;
+    font-family: 'Courier New', Courier, monospace;
+
+
+}
+
+#Sair-personalizaçao {
+    position: absolute;
+    left: 50vh;
+    top: 1vh;
+    padding: 3vh;
+    border-radius: 50px;
+    background-color: rgba(255, 0, 0, 0);
+    border: solid 0px;
+    font-size: 50px;
+    cursor: pointer;
+}
+
+#Sair-personalizaçao:hover {
+    transition: 0.5s;
+
+    animation: Pulsaçao 2.5s infinite ease-in-out;
+
+
+}
+
+#IMG-Input {
+    display: none;
+}
+
+.MulduraImg {
+    position: absolute;
+    left: 111vh;
+    top: 15vh;
+    background-color: #007bb5;
+    width: 250px;
+    height: 250px;
+    border-radius: 150px;
+    background-image: url(../assets/Sem\ foto.avif);
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    box-shadow: 5px 5px 0px rgb(9, 9, 10);
+}
+
+
+#IMG-Edit {
+    width: 20%;
+    padding: 1vh;
+    position: absolute;
+    top: 23rem;
+    left: 64vh;
+}
+
+#Salvar {
+    width: 20%;
+    padding: 1vh;
+    border-radius: 10px;
+    translate: 2vh;
+}
+
+#Salvar:hover {
+    transition: 0.6s;
+    background-color: #00c0ca;
+    color: white;
+    border: solid;
+}
+
+/* parte portifolio nao meche que tudo vai correr bem */
+
+.Conteiner-Portifolio {
+    transition: 0.5s;
+    width: 100%;
+    height: 158%;
+    background-color: #0000005f;
+    position: absolute;
+    left: 0vh;
+    z-index: 1;
+    backdrop-filter: blur(5px);
+    display: none;
+}
+
+.edit-portifolio {
+    background-color: #f2f2f2;
+    width: 60%;
+    height: 90%;
+    position: absolute;
+    top: 2vh;
+    left: 50vh;
+    display: flex;
+    flex-direction: column;
+    gap: 1vh;
+    border-radius: 10px;
+    margin: 2vh;
+}
+
+
+
+.Portifolio-Title {
+    text-align: center;
+    font-family: 'Courier New', Courier, monospace;
+    background-color: #00eaff3f;
+    margin-top: 10vh;
+}
+
+#Sair-Portifolio {
+    position: absolute;
+    left: -2vh;
+    top: -3vh;
+    padding: 3vh;
+    border-radius: 50px;
+    background-color: rgba(255, 0, 0, 0);
+    border: solid 0px;
+    font-size: 50px;
+    cursor: pointer;
+
+}
+
+#Sair-Portifolio:hover {
+    transition: 0.5s;
+    animation: Pulsaçao 2.5s infinite ease-in-out;
+
+
+
+}
+
+.Section-Portifolio {
+    margin: 2vh;
+    width: 30%;
+    height: 90%;
+    display: flex;
+    flex-direction: column;
+    gap: 5vh;
+}
+
+.Habilidades {
+    font-family: 'Courier New', Courier, monospace;
+}
+
+.label {
+    font-family: 'Courier New', Courier, monospace;
+}
+
+#Salvar-portifolio {
+    width: 60%;
+    padding: 1vh;
+    border-radius: 10px;
+    translate: 2vh;
+}
+
+#Salvar-portifolio:hover {
+    transition: 0.6s;
+    background-color: #00c0ca;
+    color: white;
+    border: solid;
+}
+
+@keyframes Pulsaçao {
+    0% {
+        transform: scale(1);
+        color: #02c9f6;
+        text-shadow: 0 0 5px rgb(2, 246, 197);
+        opacity: 1;
+    }
+
+    50% {
+        transform: scale(1.15);
+        /* Cresce 15% */
+        color: #000000;
+        text-shadow: 0 0 15px rgba(0, 0, 0, 0.7);
+        opacity: 0.8;
+        /* Levemente mais transparente */
+    }
+
+    100% {
+        transform: scale(1);
+        color: #00fee9;
+        text-shadow: 0 0 5px rgb(0, 255, 251);
+        opacity: 1;
+    }
+}

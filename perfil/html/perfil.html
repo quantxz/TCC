@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Perfil do Desenvolvedor</title>
+    <link rel="stylesheet" href="../css/perfil.css">
+</head>
+
+<body>
+    <div class="Conteiner-Perfil">
+        <div class="edit-perfil">
+            <hr>
+            <h1 class="title-Perfil">Personalizaçao de conta</h1>
+            <!-- personalizaçao de perfil -->
+            <label for="Nome"> Digite seu novo Nome:</label>
+            <input type="text" name="Nome" id="Name" placeholder="Digite seu nome"><br>
+            <label for="user">Digite seu novo apelido:</label>
+            <input type="text" name="User" id="Username" placeholder="Digite seu Username" required="@"><br>
+            <label for="Bio">Bio:</label>
+            <input type="text" name="Bio" id="Bio" placeholder="sua bio">
+            <input type="file" name="IMG-perfil" id="IMG-Input">
+            <button id="IMG-Edit">Foto De Perfil</button>
+            <button id="Salvar">Salvar</button>
+            <!-- personalizaçao de perfil -->
+
+        </div>
+        <div>
+            <button id="Sair-personalizaçao">X</button>
+        </div>
+        <div Class="MulduraImg">
+
+
+        </div>
+    </div>
+    <!-- personalizaçao de portifolio -->
+    <div class="Conteiner-Portifolio">
+        <div class="edit-portifolio">
+            <h1 class="Portifolio-Title">
+                <button id="Sair-Portifolio">X</button>
+                Personalizaçao De Portifolio
+            </h1><br>
+            <div class="Section-Portifolio">
+                <h1 class="Habilidades">
+                    Habilidades:
+                </h1>
+                <label for="HAB1">LINGUAGEMS:</label>
+                <input type="text" name="HAB1" placeholder="digite sua linguagem de trabalho" id="LINGUA">
+                <label for="HAB1">EXPEIENCIA PROFISSIONAL:</label>
+                <input type="text" name="HAB2" placeholder="Experiencia profissional" id="Experiencia">
+                <label for=" HAB1">EXPECIALIDADE:</label>
+                <input type="text" name="HAB3" placeholder="Fronte-end, Back-end, fullstack" id="EXPECIALIDADE">
+                <label for="HAB1">NIVEL:</label>
+                <input type="text" name="HAB4" placeholder="Junior,Pleno,Senior" id="NIVEL">
+                <button id="Salvar-portifolio">Salvar</button>
+            </div>
+        </div>
+    </div>
+    <!-- info-Portifolio -->
+    <div class="profile-container">
+        <header class="profile-header">
+            <div class="profile-picture">
+                <div class="FotoPerfil">
+
+                </div>
+
+            </div>
+            <div class="profile-info">
+                <h1 class="NomeTXT"></h1>
+                <p class="UsernameTXT">@</p>
+                <p class="BioTXT"></p>
+                <div class="social-links">
+                    <a href="#" target="_blank">GitHub</a>
+                    <a href="#" target="_blank">LinkedIn</a>
+                    <a href="#" target="_blank">Twitter</a>
+                </div>
+                <button id="EditarPerfil">Editar Perfil</button>
+                <button id="EditarPortifolio">Editar Portifolio</button>
+            </div>
+        </header>
+        <section class="profile-skills">
+            <h2>Habilidades</h2>
+            <ul>
+                <li class="habilidade1"></li>
+                <li class="habilidade2"></li>
+                <li class="habilidade3"></li>
+                <li class="habilidade4"></li>
+
+
+
+            </ul>
+        </section>
+        <section class="profile-projects">
+            <h2>Projetos</h2>
+            <div class="project-item">
+                <h3>Projeto 1</h3>
+                <p>Descrição breve do Projeto 1. Inclui tecnologias usadas e objetivos do projeto.</p>
+                <a href="#" target="_blank">Ver Projeto</a>
+            </div>
+            <div class="project-item">
+                <h3>Projeto 2</h3>
+                <p>Descrição breve do Projeto 2. Inclui tecnologias usadas e objetivos do projeto.</p>
+                <a href="#" target="_blank">Ver Projeto</a>
+            </div>
+            <div class="project-item">
+                <h3>Projeto 3</h3>
+                <p>Descrição breve do Projeto 3. Inclui tecnologias usadas e objetivos do projeto.</p>
+                <a href="#" target="_blank">Ver Projeto</a>
+            </div>
+
+        </section>
+        <section class="profile-posts">
+            <h2>Posts Recentes</h2>
+            <div class="post">
+                <img src="post1.jpg" alt="Post 1">
+                <p>Descrição do Post 1. Pode incluir artigos, tutoriais ou insights.</p>
+            </div>
+            <div class="post">
+                <img src="post2.jpg" alt="Post 2">
+                <p>Descrição do Post 2. Pode incluir artigos, tutoriais ou insights.</p>
+            </div>
+            <div class="post">
+                <img src="post3.jpg" alt="Post 3">
+                <p>Descrição do Post 3. Pode incluir artigos, tutoriais ou insights.</p>
+            </div>
+
+        </section>
+    </div>
+    <script src="../js/perfil.js"></script>
+    <script src="../js/Potifolio.js"></script>
+</body>
+
+</html>
