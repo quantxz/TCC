@@ -10,6 +10,7 @@ import { stringify } from 'querystring';
 export class UploadsService {
     public folderPostsPath = path.join(__dirname, "..", "..", "..", "static", "posts-images");
     public folderCommentsPath = path.join(__dirname, "..", "..", "..", "static", "comments-images");
+    public folderProfilePath = path.join(__dirname, "..", "..", "..", "static", "profile-images");
 
     imageTypesList: string[] = [
         "jpg", "gif", "png", "svg", "webp", "raw", "tiff", "bmp", "pdf", "jpeg",
@@ -32,6 +33,23 @@ export class UploadsService {
         switch (type) {
             case "Comment":
                 if (fileWeightInMb < 20) {
+                    //Criando um novo nome de arquivo usando valores que não se repetem
+                    const timestamp = new Date().getTime();
+                    const hash = crypto.randomBytes(8).toString('hex');
+                    const fileName = `${timestamp}_${hash}.${fileType}`;
+
+
+
+                    // Garantindo que a pasta de destino existe, se não, criando-a
+                    await fs.ensureDir(this.folderProfilePath);
+
+                    await fs.writeFile(path.join(this.folderProfilePath, fileName), file.buffer);
+
+                    return fileName;
+                }
+                break;
+            case "Profile":
+                    if (fileWeightInMb < 20) {
                     //Criando um novo nome de arquivo usando valores que não se repetem
                     const timestamp = new Date().getTime();
                     const hash = crypto.randomBytes(8).toString('hex');
