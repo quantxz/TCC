@@ -47,6 +47,7 @@ export class PostsAtributesService {
 
         switch(type) {
             case "like":
+
                 const likedPost = await this.prismaService.likedsPosts.create({
                     data: {
                         author: data.author,
@@ -56,6 +57,23 @@ export class PostsAtributesService {
         
                 return likedPost
             case "unlike":
+                const post = await this.prismaService.posts.findUnique({
+                    where: {
+                        id: data.postId
+                    }
+                })
+
+                if(post.likes < 0) {
+                    await this.prismaService.posts.update({
+                        data: {
+                            likes: 0
+                        },
+                        where: {
+                            id: data.postId
+                        }
+                    })
+                }
+                
                 const unlikedPost = await this.prismaService.likedsPosts.delete({
                     where: {
                         id: data.id

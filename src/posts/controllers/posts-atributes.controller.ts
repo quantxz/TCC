@@ -78,13 +78,15 @@ export class PostsAtributes {
 
     try {
       const likedPost = await this.postsAtributesService.UpdatePostLiked(dto, type)
- 
+
       return res.status(200).json({
         message: "like posts status updated",
         status: 200,
         postInfo: likedPost
       })
+
     } catch (error) {
+      
       return res.status(400).json({
         message: "erro na soliçitação"
       })
