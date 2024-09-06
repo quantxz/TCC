@@ -10,6 +10,7 @@ import { PostsAtributes } from './posts-atributes.controller';
 import { Response } from 'express';
 import { Posts } from '@prisma/client';
 import { PostDto } from '../dto/post.dto';
+import { UserService } from 'src/users/users.service';
 
 
 /*
@@ -24,7 +25,8 @@ export class PostsController extends PostsAtributes {
   constructor(
     private readonly postsService: PostsService,
     readonly uploadsService: UploadsService,
-    readonly postsAtributesService: PostsAtributesService
+    readonly postsAtributesService: PostsAtributesService,
+    readonly userService: UserService
   ) {
     super(postsAtributesService, uploadsService)
   }
@@ -49,7 +51,7 @@ export class PostsController extends PostsAtributes {
 
       } else {
         console.log("postDto")
-        console.log(postDto) 
+        console.log(postDto)
         const postDtoWithoutImage: CreatePostDto = {
           title: postDto.title,
           content: postDto.content,
@@ -78,29 +80,39 @@ export class PostsController extends PostsAtributes {
     try {
       const posts = await this.postsService.findAll();
 
-      // If postsService.findAll() returns an array of posts
+      // Recuperando os dados dos autores para cada post
       const postsAttributesPromises = posts.map(async (post) => {
         const obj = {
           author: post.author,
           postId: post.id
         };
-        return await this.postsAtributesService.findUserPostLiked(obj);
+
+        // Buscar atributos relacionados ao post (como likes) e também dados do autor
+        const postAttributes = await this.postsAtributesService.findUserPostLiked(obj);
+        const user = await this.userService.findByNickname(post.author); // Buscar o autor pelo nickname
+
+        return {
+          attributes: postAttributes,
+          authorName: `${user?.name}` // Nome completo do autor
+        };
       });
 
       const postsAttributes = await Promise.all(postsAttributesPromises);
 
-      // You can modify the posts array to include the attributes if needed
+      // Incluir o nome do autor e outros atributos nos posts
       const postsWithAttributes = posts.map((post, index) => ({
         ...post,
-        attributes: postsAttributes[index]
+        authorName: postsAttributes[index].authorName, // Adiciona o nome do autor
+        attributes: postsAttributes[index].attributes // Atributos do post, como likes
       }));
 
-      return res.status(200).json(postsWithAttributes); // Properly using the response object
+      return res.status(200).json(postsWithAttributes); // Retornar os posts com os novos dados
     } catch (error) {
-      console.error("An error occurred:", error); // Logging the error for debugging
-      throw new BadRequestException("An error occurred: " + error.message); // Providing a meaningful error message
+      console.error("An error occurred:", error); // Logar o erro para debugging
+      throw new BadRequestException("An error occurred: " + error.message); // Mensagem de erro
     }
   }
+
 
   @Get('find-posts-of-author/:author')
   findByAuthor(@Param('author') author: string) {
