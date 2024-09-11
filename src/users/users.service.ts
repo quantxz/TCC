@@ -62,7 +62,7 @@ export class UserService {
     }
   }
 
-  async findUnique(type: string, userDto: UserDto) {
+  async findUnique(type: string, userDto: UserDto,) {
     let user: UserDto;
     try {
       switch (type) {
@@ -84,6 +84,7 @@ export class UserService {
           })
 
           break;
+
         default:
           throw new UserNotFoundException();
       }
@@ -94,6 +95,16 @@ export class UserService {
       this.logger.error("Erro durante a procura pelo usuario: " + error)
       throw new Error("Erro durante a procura pelo usuario: " + error)
     }
+  }
+
+  async findOnlyByNick(nick: string) {
+    const user = await this.prismaService.user.findUnique({
+      where: {
+        nickname: nick,
+      }
+    })
+
+    return user
   }
 
   async update(updateType: string, updateUserDto: UpdateUserDto): Promise<UpdateUserDto> {

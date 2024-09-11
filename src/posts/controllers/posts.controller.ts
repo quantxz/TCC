@@ -10,6 +10,7 @@ import { PostsAtributes } from './posts-atributes.controller';
 import { Response } from 'express';
 import { Posts } from '@prisma/client';
 import { PostDto } from '../dto/post.dto';
+import { UserService } from 'src/users/users.service';
 
 
 /*
@@ -24,7 +25,8 @@ export class PostsController extends PostsAtributes {
   constructor(
     private readonly postsService: PostsService,
     readonly uploadsService: UploadsService,
-    readonly postsAtributesService: PostsAtributesService
+    readonly postsAtributesService: PostsAtributesService,
+    readonly userService: UserService
   ) {
     super(postsAtributesService, uploadsService)
   }
@@ -82,19 +84,23 @@ export class PostsController extends PostsAtributes {
       const postsAttributesPromises = posts.map(async (post) => {
         const obj = {
           author: post.author,
-          postId: post.id
+          postId: post.id,
         };
-        return await this.postsAtributesService.findUserPostLiked(obj);
+        return [await Promise.all([
+          this.postsAtributesService.findUserPostLiked(obj), 
+          this.userService.findOnlyByNick(post.author)
+        ])]
       });
 
       const postsAttributes = await Promise.all(postsAttributesPromises);
-
+ 
       // You can modify the posts array to include the attributes if needed
       const postsWithAttributes = posts.map((post, index) => ({
         ...post,
         attributes: postsAttributes[index]
       }));
-
+      
+      console.log(postsWithAttributes)
       return res.status(200).json(postsWithAttributes); // Properly using the response object
     } catch (error) {
       console.error("An error occurred:", error); // Logging the error for debugging
