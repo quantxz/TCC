@@ -90,10 +90,10 @@ export class PostsController extends PostsAtributes {
         // Buscar atributos relacionados ao post (como likes) e também dados do autor
         const postAttributes = await this.postsAtributesService.findUserPostLiked(obj);
         const user = await this.userService.findByNickname(post.author); // Buscar o autor pelo nickname
-
+     
         return {
           attributes: postAttributes,
-          authorName: `${user?.name}` // Nome completo do autor
+          authorName: `${user.name}`
         };
       });
 
@@ -103,7 +103,8 @@ export class PostsController extends PostsAtributes {
       const postsWithAttributes = posts.map((post, index) => ({
         ...post,
         authorName: postsAttributes[index].authorName, // Adiciona o nome do autor
-        attributes: postsAttributes[index].attributes // Atributos do post, como likes
+        attributes: postsAttributes[index].attributes,
+        name: postsAttributes[index].authorName // Atributos do post, como likes
       }));
 
       return res.status(200).json(postsWithAttributes); // Retornar os posts com os novos dados
