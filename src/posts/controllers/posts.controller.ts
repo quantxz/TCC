@@ -84,7 +84,7 @@ export class PostsController extends PostsAtributes {
       const postsAttributesPromises = posts.map(async (post) => {
         const obj = {
           author: post.author,
-          postId: post.id
+          postId: post.id,
         };
 
         // Buscar atributos relacionados ao post (como likes) e também dados do autor
