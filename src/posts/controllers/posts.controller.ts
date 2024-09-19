@@ -39,7 +39,7 @@ export class PostsController extends PostsAtributes {
       if (file) {
 
         const result = await this.uploadsService.filePipe(file);
-        const postImageUrl = `${"http://localhost:3000/" + result}`;
+        const postImageUrl = `${"https://tcc-qmro.onrender.com/" + result}`;
 
         const postDtoWithImage: CreatePostDto = {
           title: postDto.title,
