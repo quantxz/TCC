@@ -16,21 +16,40 @@ export class SocketGateway implements OnGatewayInit, OnGatewayConnection, OnGate
   private userAndRoom: UsersInRoomDto[] = [];
   private logger: Logger = new Logger('AppGateway');
 
+  private messages: MessageDto[] = []
+
   @WebSocketServer() server: Server;
 
   constructor(
     private prismaService: PrismaService,
     private messageJobService: insertMessageProducerService,
-    private messagesService: SocketMessageService
-  ) { }
+    private messagesService: SocketMessageService 
+  ) {
+    this.saveMessage(this.messages);
+  }
 
   @SubscribeMessage('find_messages')
   async findMessages(client: Socket, roomName: string): Promise<void> {
     const messages = await this.messagesService.findMessages(roomName);
-    // Emita as mensagens de volta para todos os clientes na sala
+  
     this.server.to(roomName).emit('all_messages', messages);
   }
+  
+ 
+  async saveMessage(data: MessageDto[]) {
 
+    setInterval(async () => {
+      await this.messagesService.saveMessage(data)
+      this.saveMessage(this.messages)
+    }, 600000)
+
+  }
+
+  @SubscribeMessage('save messages queue')
+  async putMessagesInSaveQueue(client: Socket, data: MessageDto): Promise<void> {
+    this.messages.push(data);
+  }
+ 
   @SubscribeMessage("select room")
   async selectRoom(roomName: string, client: Socket) {
     let room = await this.prismaService.chatRoom.findUnique({
@@ -55,19 +74,20 @@ export class SocketGateway implements OnGatewayInit, OnGatewayConnection, OnGate
   //quando o cliente mandar uma mensagem com o tipo message este metodo sera chamado
   @SubscribeMessage('message')
   async handleMessage(client: Socket, data: MessageDto): Promise<void> {
-    this.server.to(data.room).emit("message", { 
+
+    this.server.to(data.room).emit("message", {
+      author: data.author,
       content: data.content,
-      hour:   data.hour 
+      hour: data.hour
     })
 
-    this.messageJobService.insertMessage(data)
   }
 
   @SubscribeMessage('private message')
   async handlePrivateMessage(client: Socket, data: PrivateMessagesDTO): Promise<void> {
     this.server.to(data.to).emit("private message", {
-        content: data.content,
-        from: client.id
+      content: data.content,
+      from: client.id
     })
 
     await this.messageJobService.insertPrivateMessage(data)

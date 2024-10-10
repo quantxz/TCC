@@ -1,32 +1,37 @@
 import { MessageDto } from "src/socket/dto/wss/socket-room-messages.dto";
 import { PrismaService } from "../configs/prisma.service";
-import { Injectable } from "@nestjs/common";
+import { Injectable, Logger } from "@nestjs/common";
 import { PrivateMessagesDTO } from "src/socket/dto/wss/socket-private-messages.dto";
 
 
 @Injectable()
 export class SocketMessageService {
     constructor(readonly prismaService: PrismaService) {}
-    
-    async saveMessage(data: MessageDto) {
-        const message = await this.prismaService.messages.create({
-            data: {
-                author: data.author,
-                content: data.content,
-                room:   data.room,
-                hour:   data.hour
-            }
-        })
-
-        return message
+    private logger: Logger = new Logger('AppGateway');
+    async saveMessage(data: MessageDto[]) {
+        console.time("start")
+        this.logger.log("starting messages save")
+        for(let message of data) {
+            await this.prismaService.messages.create({
+                data: {
+                    author:     message.author,
+                    content:    message.content,
+                    room:       message.room,
+                    hour:       message.hour
+                }
+            })
+        }
+        console.timeEnd("start")
+        this.logger.log("finishing messages save")
     }
+
     
     async savePrivateMessage(data: PrivateMessagesDTO) {
         const message = await this.prismaService.privateMessages.create({
             data: {
-                author: data.author,
-                content: data.content,
-                to:   data.to
+                author:     data.author,
+                content:    data.content,
+                to:         data.to
             }
         })
 
@@ -40,7 +45,7 @@ export class SocketMessageService {
             }
         });
 
-        return messages;
+        return messages; 
     }
 
     async deleteMessage(data: MessageDto) {

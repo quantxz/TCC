@@ -31,7 +31,12 @@ import { join } from 'path';
     BullModule.forRoot({
       redis: {
         host: 'redis',
-        port: 6379
+        port: 6379,
+        maxRetriesPerRequest: null,
+        retryStrategy: (times) => {
+          const delay = Math.min(times * 100, 3000); // Aumenta o atraso exponencialmente
+          return delay; // Retorna o atraso em milissegundos
+        },
       },
     }),
     MailerModule.forRoot({ 

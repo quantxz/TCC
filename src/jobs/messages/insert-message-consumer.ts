@@ -9,11 +9,11 @@ import { MessageDto } from "src/socket/dto/wss/socket-room-messages.dto";
 export class insertMessageConsumer {
     constructor(private messagesService: SocketMessageService) { }
 
-    @Process('insertMessage-Job')
-    async insertMessageJob(job: Job<MessageDto>) { 
-        console.log(job.data)
-        await this.messagesService.saveMessage(job.data)
-    }
+    // @Process('insertMessage-Job')
+    // async insertMessageJob(job: Job<MessageDto>) { 
+    //     console.log(job.data)
+    //     await this.messagesService.saveMessage(job.data)
+    // }
 
     @Process('insertPrivateMessage-Job')
     async insertPrivateMessageJob(job: Job<PrivateMessagesDTO>) { 
