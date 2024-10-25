@@ -85,6 +85,7 @@ model Posts {
   likes       Int           @default(0)
   comments    Comments[]
   likedsposts LikedsPosts[]
+  tag         String @default("none")
 
   creator User @relation(fields: [author], references: [nickname])
 

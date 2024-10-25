@@ -11,6 +11,7 @@ import { Response } from 'express';
 import { Posts } from '@prisma/client';
 import { PostDto } from '../dto/post.dto';
 import { UserService } from 'src/users/users.service';
+import { PostsFamousController } from './famous-posts-controller';
 
 
 /*

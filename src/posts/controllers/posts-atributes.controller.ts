@@ -1,5 +1,5 @@
 import { UploadsService } from '../../files configurers/uploads/uploads.service';
-import { Post, Body, Patch, Param, Delete, UseInterceptors, UploadedFile, BadRequestException, Query, Res, Get } from '@nestjs/common';
+import { Post, Body, Patch, Param, Delete, UseInterceptors, UploadedFile, BadRequestException, Query, Res, Get, Logger } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { FileDto } from 'file-manager-3ds/dist/types/file-type';
 import { CommentDto, LikedsPostsDto } from '../dto/posts-atributes.dto';
@@ -8,7 +8,7 @@ import { CreatePostDto } from '../dto/create-post.dto';
 import { Response } from 'express';
 
 export class PostsAtributes {
-
+  private logger: Logger = new Logger('PostsAtributes Controller');
   constructor(
     protected readonly postsAtributesService: PostsAtributesService,
     protected readonly uploadsService: UploadsService
@@ -16,9 +16,9 @@ export class PostsAtributes {
 
   @Post('comments')
   @UseInterceptors(FileInterceptor("file"))
-  async comment(@Body() commentDto: CommentDto, @UploadedFile() file: FileDto) {
+  async registerComment(@Body() commentDto: CommentDto, @UploadedFile() file: FileDto) {
     try { 
-      console.log("\nahhhhhh", file, "ahhhhhh\n")
+
       if (file) {
         const result = await this.uploadsService.filePipe<"Comment">(file);
         const commentImageUrl = `${this.uploadsService.folderCommentsPath + "/" + result}`;
@@ -43,6 +43,20 @@ export class PostsAtributes {
       throw new BadRequestException("o seguinte erro ocorreu: " + error);
     }
 
+  }
+
+  @Get('comments')
+  async getComments(@Body() postId: string, @Res() res: Response) {
+    try {
+      const comments = await this.postsAtributesService.getComments(postId);
+
+      return res.status(200).json({
+        comentarios: comments
+      })
+
+    } catch (error) {
+      this.logger.error("erro no controlador dos atributos do posts. Mais detalhes:\n", error, "\n")
+    }
   }
 
   @Patch('likes')

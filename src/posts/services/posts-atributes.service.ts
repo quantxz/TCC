@@ -39,6 +39,32 @@ export class PostsAtributesService {
         }
     }
 
+    async getComments(postId: string) {
+        try {
+            const comments = await this.prismaService.comments.findMany({
+                where: {
+                    postId,
+                },
+            });
+            
+            const commentsWithUsers = await Promise.all(comments.map(async (comment) => {
+                const user = await this.prismaService.user.findUnique({
+                    where: {
+                        nickname: comment.authorNick,
+                    },
+                });
+                return {
+                    ...comment,
+                    user, 
+                };
+            }));
+            
+            return commentsWithUsers;
+        } catch (error) {
+            this.logger.error("erro ao recuperar comentarios. Mais detalhes:\n" ,error, "\n")
+        }
+    }
+
     async findUserPostLiked(data: LikedsPostsDto) {
         const likedPost = await this.prismaService.likedsPosts.findFirst({
             where: {

@@ -59,6 +59,7 @@ Table posts {
   likes Int [not null, default: 0]
   comments comments [not null]
   likedsposts likedsPosts [not null]
+  tag String [not null, default: 'none']
   creator users [not null]
 }
 
