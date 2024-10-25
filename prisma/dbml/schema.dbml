@@ -1,0 +1,99 @@
+//// ------------------------------------------------------
+//// THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+//// ------------------------------------------------------
+
+Table admin {
+  id String [pk]
+}
+
+Table users {
+  id String [pk]
+  name String [not null]
+  surname String [not null]
+  email String [unique, not null]
+  password String [not null]
+  nickname String [unique, not null]
+  bio String [not null, default: '']
+  skills String [not null, default: '']
+  profilePic String [not null, default: '']
+  PrivateMessages PrivateMessages [not null]
+  messages messages [not null]
+  posts posts [not null]
+  comments comments [not null]
+  likedPosts likedsPosts [not null]
+  cpf String [unique]
+  rg String [unique]
+}
+
+Table chat_rooms {
+  id String [pk]
+  name String [unique, not null]
+  messages messages [not null]
+}
+
+Table messages {
+  id String [pk]
+  author String [not null]
+  content String [not null]
+  room String [not null]
+  hour String [not null]
+  roomSended chat_rooms [not null]
+  creator users [not null]
+}
+
+Table PrivateMessages {
+  id String [pk]
+  author String [not null]
+  content String [not null]
+  to String [not null]
+  creator users [not null]
+}
+
+Table posts {
+  id String [pk]
+  title String [not null]
+  content String [not null]
+  author String [not null]
+  type String [default: 'post']
+  createdAt DateTime [default: `now()`, not null]
+  likes Int [not null, default: 0]
+  comments comments [not null]
+  likedsposts likedsPosts [not null]
+  creator users [not null]
+}
+
+Table likedsPosts {
+  id String [pk]
+  author String [not null]
+  postId String [not null]
+  user users [not null]
+  post posts [not null]
+}
+
+Table comments {
+  id String [pk]
+  content String [not null]
+  authorNick String [not null]
+  postId String [not null]
+  likes Int [not null, default: 0]
+  image String [not null, default: 'none']
+  author users [not null]
+  post posts [not null]
+  createdAt DateTime [default: `now()`, not null]
+}
+
+Ref: messages.room > chat_rooms.name
+
+Ref: messages.author > users.nickname
+
+Ref: PrivateMessages.author > users.nickname
+
+Ref: posts.author > users.nickname
+
+Ref: likedsPosts.author > users.nickname
+
+Ref: likedsPosts.postId > posts.id
+
+Ref: comments.authorNick > users.nickname
+
+Ref: comments.postId > posts.id
