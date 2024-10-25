@@ -18,21 +18,24 @@ export class PostsAtributes {
   @UseInterceptors(FileInterceptor("file"))
   async comment(@Body() commentDto: CommentDto, @UploadedFile() file: FileDto) {
     try { 
+      console.log("\nahhhhhh", file, "ahhhhhh\n")
       if (file) {
         const result = await this.uploadsService.filePipe<"Comment">(file);
         const commentImageUrl = `${this.uploadsService.folderCommentsPath + "/" + result}`;
+         
 
         const data: CommentDto = {
-          content: commentImageUrl,
-          authorNick: commentDto.authorNick,
+          content:  commentDto.content,
+          image: commentImageUrl,
+          authorNick: commentDto.authorNick, 
           postId: commentDto.postId
         }
 
-        const comment = await this.postsAtributesService.createComment(data);
+        const comment = await this.postsAtributesService.doComment(data);
 
         return comment;
       } else {
-        const comment = await this.postsAtributesService.createComment(commentDto);
+        const comment = await this.postsAtributesService.doComment(commentDto);
 
         return comment;
       }

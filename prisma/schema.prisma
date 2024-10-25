@@ -14,14 +14,14 @@ model admin {
 }
 
 model User {
-  id       String @id @default(uuid())
-  name     String
-  surname  String
-  email    String @unique
-  password String
-  nickname String @unique
-  bio      String @default("")
-  skills   String @default("")
+  id         String @id @default(uuid())
+  name       String
+  surname    String
+  email      String @unique
+  password   String
+  nickname   String @unique
+  bio        String @default("")
+  skills     String @default("")
   profilePic String @default("")
 
   PrivateMessages PrivateMessages[]
@@ -98,15 +98,15 @@ model LikedsPosts {
 }
 
 model Comments {
-  id      String @id @default(uuid())
-  content String
-
+  id         String @id @default(uuid())
+  content    String
   authorNick String
-  author     User   @relation(fields: [authorNick], references: [nickname])
+  postId     String
+  likes      Int    @default(0)
+  image      String @default("none")
 
-  postId    String
+  author    User     @relation(fields: [authorNick], references: [nickname])
   post      Posts    @relation(fields: [postId], references: [id])
-  likes     Int      @default(0)
   createdAt DateTime @default(now())
 
   @@map("comments")

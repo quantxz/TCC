@@ -12,6 +12,17 @@ export class SocketMessageService {
         console.time("start")
         this.logger.log("starting messages save")
         for(let message of data) {
+            const checker = await this.prismaService.messages.findMany({
+                where: {
+                    author:     message.author,
+                    content:    message.content,
+                    room:       message.room,
+                    hour:       message.hour
+                }
+            })
+
+            if(checker.length == 0) continue;
+
             await this.prismaService.messages.create({
                 data: {
                     author:     message.author,

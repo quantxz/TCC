@@ -9,17 +9,31 @@ export class PostsAtributesService {
     private logger: Logger = new Logger('PostsAtributes Service');
     constructor(private readonly prismaService: PrismaService) { }
 
-    async createComment(commentDto: CommentDto) {
+    async doComment(commentDto: CommentDto) {
         try {
-            const comment = await this.prismaService.comments.create({
-                data: {
-                    content: commentDto.content,
-                    authorNick: commentDto.authorNick,
-                    postId: commentDto.postId
-                }
-            });
+            console.log("\n",commentDto)
+            if (commentDto.image) {
+                const comment = await this.prismaService.comments.create({
+                    data: {
+                        content: commentDto.content,
+                        authorNick: commentDto.authorNick,
+                        postId: commentDto.postId,
+                        image: commentDto.image
+                    }
+                });
 
-            return comment
+                return comment
+            } else {
+                const comment = await this.prismaService.comments.create({
+                    data: {
+                        content: commentDto.content,
+                        authorNick: commentDto.authorNick,
+                        postId: commentDto.postId,
+                    }
+                });
+
+                return comment
+            }
         } catch (error) {
             this.logger.error(error)
         }
@@ -45,7 +59,7 @@ export class PostsAtributesService {
 
     async UpdatePostLiked(data: LikedsPostsDto, type: string) {
 
-        switch(type) {
+        switch (type) {
             case "like":
 
                 const likedPost = await this.prismaService.likedsPosts.create({
@@ -54,7 +68,7 @@ export class PostsAtributesService {
                         postId: data.postId
                     }
                 });
-        
+
                 return likedPost
             case "unlike":
                 const post = await this.prismaService.posts.findUnique({
@@ -63,7 +77,7 @@ export class PostsAtributesService {
                     }
                 })
 
-                if(post.likes < 0) {
+                if (post.likes < 0) {
                     await this.prismaService.posts.update({
                         data: {
                             likes: 0
@@ -73,7 +87,7 @@ export class PostsAtributesService {
                         }
                     })
                 }
-                
+
                 const unlikedPost = await this.prismaService.likedsPosts.delete({
                     where: {
                         id: data.id
