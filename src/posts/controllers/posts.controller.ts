@@ -21,6 +21,8 @@ import { PostsFamousController } from './famous-posts-controller';
   update ❌
   delete ✔
 */
+
+
 @Controller('posts')
 export class PostsController extends PostsAtributes {
   constructor(
@@ -39,7 +41,7 @@ export class PostsController extends PostsAtributes {
     try {
       if (file) {
 
-        const result = await this.uploadsService.filePipe(file);
+        const result = await this.uploadsService.filePipe<string>(file, "Post");
         const postImageUrl = `${"http://localhost:3000/" + result}`;
 
         const postDtoWithImage: CreatePostDto = {

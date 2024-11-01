@@ -23,11 +23,9 @@ export class UploadsService {
         return extension[extension.length - 1];
     }
 
-    async filePipe<T extends string>(file: FileDto): Promise<string> {
+    async filePipe<T extends string>(file: FileDto, type: T): Promise<string> {
         const fileType = this.ReadExtension(file.originalname);
         const fileWeightInMb = file.size / (1024 * 1024);
-        //inferindo o valor de T no type
-        const type: T = null!;
 
         switch (type) {
             case "Comment":

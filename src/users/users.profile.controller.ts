@@ -26,7 +26,7 @@ export class UsersProfileController {
             let profilePic;
             
             if(file) {
-                const result = await this.uploadsService.filePipe(file);
+                const result = await this.uploadsService.filePipe(file, "Post");
                 const profileImageUrl = `${process.env.SERVER_URL + result}`;
                 profilePic = profileImageUrl;
             }

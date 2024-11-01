@@ -6,6 +6,7 @@ import { CommentDto, LikedsPostsDto } from '../dto/posts-atributes.dto';
 import { PostsAtributesService } from '../services/posts-atributes.service';
 import { CreatePostDto } from '../dto/create-post.dto';
 import { Response } from 'express';
+import { PrismaService } from 'src/services/configs/prisma.service';
 
 export class PostsAtributes {
   private logger: Logger = new Logger('PostsAtributes Controller');
@@ -18,16 +19,15 @@ export class PostsAtributes {
   @UseInterceptors(FileInterceptor("file"))
   async registerComment(@Body() commentDto: CommentDto, @UploadedFile() file: FileDto) {
     try { 
-
       if (file) {
-        const result = await this.uploadsService.filePipe<"Comment">(file);
-        const commentImageUrl = `${this.uploadsService.folderCommentsPath + "/" + result}`;
-         
+        const result = await this.uploadsService.filePipe<string>(file, "Comment");
+        const commentImageUrl = `${"http://localhost:3000/" + result}`;
+        console.log(commentImageUrl)
 
         const data: CommentDto = {
           content:  commentDto.content,
           image: commentImageUrl,
-          authorNick: commentDto.authorNick, 
+          authorNick: commentDto.authorNick,  
           postId: commentDto.postId
         }
 
@@ -45,7 +45,7 @@ export class PostsAtributes {
 
   }
 
-  @Get('comments')
+  @Patch('comments')
   async getComments(@Body() postId: string, @Res() res: Response) {
     try {
       const comments = await this.postsAtributesService.getComments(postId);
