@@ -58,7 +58,7 @@ export class PostsAtributes {
       this.logger.error("erro no controlador dos atributos do posts. Mais detalhes:\n", error, "\n")
     }
   }
-
+  
   @Patch('likes')
   async like(
     @Body() dto: CreatePostDto,
@@ -112,6 +112,33 @@ export class PostsAtributes {
 
   @Post('likedPosts')
   async findLikedPosts(@Body() dto: LikedsPostsDto, @Res() res: Response) {
+    try {
+      const likedPost = await this.postsAtributesService.findUserPostLiked(dto)
+
+      if(likedPost.booleanValue == true) {
+        return res.status(200).json({
+          message: "returning user liked post",
+          status: 200,
+          postLiked: true,
+          postInfo: likedPost
+        })
+      } else {
+        return res.status(200).json({
+          message: "returning user liked post",
+          status: 200,
+          postLiked: false,
+          postInfo: likedPost
+        })
+      }
+    } catch (error) {
+      return res.status(400).json({
+        message: "erro na soliçitação"
+      })
+    }
+  }
+
+  @Post('likedCommendtsPosts')
+  async findLikedComments(@Body() dto: LikedsPostsDto, @Res() res: Response) {
     try {
       const likedPost = await this.postsAtributesService.findUserPostLiked(dto)
 

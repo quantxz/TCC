@@ -21,6 +21,7 @@ Table users {
   posts posts [not null]
   comments comments [not null]
   likedPosts likedsPosts [not null]
+  LikedComments likedsCommentsPosts [not null]
   cpf String [unique]
   rg String [unique]
 }
@@ -59,6 +60,7 @@ Table posts {
   likes Int [not null, default: 0]
   comments comments [not null]
   likedsposts likedsPosts [not null]
+  likedComments likedsCommentsPosts [not null]
   tag String [not null, default: 'none']
   creator users [not null]
 }
@@ -83,6 +85,14 @@ Table comments {
   createdAt DateTime [default: `now()`, not null]
 }
 
+Table likedsCommentsPosts {
+  id String [pk]
+  author String [not null]
+  postId String [not null]
+  user users [not null]
+  post posts [not null]
+}
+
 Ref: messages.room > chat_rooms.name
 
 Ref: messages.author > users.nickname
@@ -98,3 +108,7 @@ Ref: likedsPosts.postId > posts.id
 Ref: comments.authorNick > users.nickname
 
 Ref: comments.postId > posts.id
+
+Ref: likedsCommentsPosts.author > users.nickname
+
+Ref: likedsCommentsPosts.postId > posts.id

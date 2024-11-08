@@ -11,7 +11,6 @@ generator dbml {
   provider = "prisma-dbml-generator"
 }
 
-
 model admin {
   id String @id
 
@@ -34,6 +33,7 @@ model User {
   posts           Posts[]
   comments        Comments[]
   likedPosts      LikedsPosts[]
+  LikedComments   LikedsCommentsPosts[]
 
   cpf String? @unique
   rg  String? @unique
@@ -82,10 +82,11 @@ model Posts {
   type      String?  @default("post")
   createdAt DateTime @default(now())
 
-  likes       Int           @default(0)
-  comments    Comments[]
-  likedsposts LikedsPosts[]
-  tag         String @default("none")
+  likes         Int                   @default(0)
+  comments      Comments[]
+  likedsposts   LikedsPosts[]
+  likedComments LikedsCommentsPosts[]
+  tag           String                @default("none")
 
   creator User @relation(fields: [author], references: [nickname])
 
@@ -116,4 +117,15 @@ model Comments {
   createdAt DateTime @default(now())
 
   @@map("comments")
+}
+
+model LikedsCommentsPosts {
+  id     String @id @default(uuid())
+  author String
+  postId String
+
+  user User  @relation(fields: [author], references: [nickname])
+  post Posts @relation(fields: [postId], references: [id])
+
+  @@map("likedsCommentsPosts")
 }

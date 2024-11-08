@@ -83,6 +83,24 @@ export class PostsAtributesService {
         };
     }
 
+    async findUserCommentsLiked(data: LikedsPostsDto) {
+        const likedComment = await this.prismaService.likedsCommentsPosts.findFirst({
+            where: {
+                author: data.author,
+                postId: data.postId
+            }
+        });
+
+        return {
+            booleanValue: !!likedComment,
+            likedPostMetadata: likedComment || {
+                id: null,
+                author: null,
+                postId: null
+            }
+        };
+    }
+
     async UpdatePostLiked(data: LikedsPostsDto, type: string) {
 
         switch (type) {
