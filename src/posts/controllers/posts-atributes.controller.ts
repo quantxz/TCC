@@ -140,7 +140,7 @@ export class PostsAtributes {
   @Post('likedCommendtsPosts')
   async findLikedComments(@Body() dto: LikedsPostsDto, @Res() res: Response) {
     try {
-      const likedPost = await this.postsAtributesService.findUserPostLiked(dto)
+      const likedPost = await this.postsAtributesService.findUserCommentsLiked(dto)
 
       if(likedPost.booleanValue == true) {
         return res.status(200).json({
