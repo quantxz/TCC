@@ -9,6 +9,16 @@ export class PostsAtributesService {
     private logger: Logger = new Logger('PostsAtributes Service');
     constructor(private readonly prismaService: PrismaService) { }
 
+    async getUser(PostId: string) {
+        const data = await this.prismaService.posts.findFirst({
+            where: {
+                id: PostId
+            }
+        })
+
+        return data
+    }
+
     async doComment(commentDto: CommentDto) {
         try {
             console.log("\n",commentDto)
