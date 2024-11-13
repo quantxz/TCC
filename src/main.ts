@@ -8,6 +8,7 @@ async function bootstrap() {
   app.enableCors();
   app.useStaticAssets(join(__dirname, '..',  'static', 'posts-images'))
   app.useStaticAssets(join(__dirname, '..',  'static', 'comments-images'))
+  app.useStaticAssets(join(__dirname, '..',  'static', 'profile-images'))
   await app.listen(3000);
 } 
 

@@ -16,6 +16,7 @@ Table users {
   bio String [not null, default: '']
   skills String [not null, default: '']
   profilePic String [not null, default: '']
+  recentsPosts String [not null, default: '']
   PrivateMessages PrivateMessages [not null]
   messages messages [not null]
   posts posts [not null]

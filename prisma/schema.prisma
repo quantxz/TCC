@@ -24,9 +24,12 @@ model User {
   email      String @unique
   password   String
   nickname   String @unique
+
   bio        String @default("")
   skills     String @default("")
   profilePic String @default("")
+
+  recentsPosts  String @default("")
 
   PrivateMessages PrivateMessages[]
   messages        Messages[]

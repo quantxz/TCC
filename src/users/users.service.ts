@@ -5,6 +5,7 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { PrismaService } from '../services/configs/prisma.service';
 import { RedisService } from '../services/configs/redis.service';
 import { InvalidTypeException, UserNotFoundException } from '../errs/exceptions';
+import { ProfileDto } from './dto/profile/profile.dto';
 
 @Injectable()
 export class UserService {
@@ -188,27 +189,6 @@ export class UserService {
     }
   }
 
-  // async FindMany() {
-  //   try {
-  //     const cachedUsers = await this.redisService.get('users');
-
-  //     if (!cachedUsers) {
-  //       const users = await this.prismaService.user.findMany();
-
-  //       await this.redisService.set('users', JSON.stringify(users), 'EX', 15)
-  //       console.log('\x1b[36m%s\x1b[0m', 'FROM PRISMA')
-  //       return users
-  //     }
-
-  //     console.log('\x1b[36m%s\x1b[0m', 'FROM CACHE')
-
-  //     return JSON.parse(cachedUsers);
-  //   } catch (error) {
-  //     this.logger.error("Erro durante a procura pelo usuario no redis: " + error)
-  //     throw new Error("Erro durante a procura pelo usuario no redis: " + error)
-  //   }
-  // }
-
   async findByNickname(nickname: string) {
     try {
       const user: UserDto = await this.prismaService.user.findUnique({
@@ -223,4 +203,20 @@ export class UserService {
       throw new Error("Erro durante a procura pelo usuario através do nickname: " + error)
     }
   }
+
+  async profileResgiter(data: ProfileDto, profilePic: string) {
+    const profile = this.prismaService.user.update({
+      where: {
+        id: data.userId
+      },
+      data: {
+        bio: data.bio,
+        skills: data.skills,
+        profilePic: profilePic,
+        recentsPosts: JSON.stringify(data.recentsPosts)
+      }
+    })
+    return profile
+  }
+
 }

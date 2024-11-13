@@ -8,8 +8,10 @@ import { BullModule } from '@nestjs/bull';
 import { MailerModule, MailerService } from '@nestjs-modules/mailer';
 import { sendMailConsumer } from 'src/jobs/mail/sendEmail-consumer';
 import { emailBodyRender } from 'src/jobs/mail/body/html-body';
+import { UsersProfileController } from './user.profiles.controller';
+import { UploadsService } from 'src/files configurers/uploads/uploads.service';
 @Module({
-  controllers: [UsersController, ],
+  controllers: [UsersController, UsersProfileController],
   imports: [
     BullModule.forRoot({
       redis: {
@@ -31,6 +33,6 @@ import { emailBodyRender } from 'src/jobs/mail/body/html-body';
       name: "mail-Queue"
     })
   ],
-  providers: [UserService,  PrismaService, sendEmailProducerService, sendMailConsumer],
+  providers: [UserService,  PrismaService, sendEmailProducerService, sendMailConsumer, UploadsService],
 })
 export class UsersModule {}
