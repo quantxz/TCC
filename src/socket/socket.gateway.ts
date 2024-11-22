@@ -35,12 +35,11 @@ export class SocketGateway implements OnGatewayInit, OnGatewayConnection, OnGate
     this.server.to(roomName).emit('all_messages', messages);
   }
   
- 
   async saveMessage(data: MessageDto[]) {
-
     setInterval(async () => {
       await this.messagesService.saveMessage(data)
       this.saveMessage(this.messages)
+      this.messages = []
     }, 600000)
 
   }
