@@ -21,7 +21,7 @@ export class PostsAtributesService {
 
     async doComment(commentDto: CommentDto) {
         try {
-            console.log("\n",commentDto)
+            console.log("\n", commentDto)
             if (commentDto.image) {
                 const comment = await this.prismaService.comments.create({
                     data: {
@@ -32,7 +32,16 @@ export class PostsAtributesService {
                     }
                 });
 
-                return comment
+                const user = await this.prismaService.user.findUnique({
+                    where: {
+                        nickname: comment.authorNick
+                    }
+                })
+
+                return [
+                    comment,
+                    user
+                ]
             } else {
                 const comment = await this.prismaService.comments.create({
                     data: {
@@ -42,7 +51,16 @@ export class PostsAtributesService {
                     }
                 });
 
-                return comment
+                const user = await this.prismaService.user.findUnique({
+                    where: {
+                        nickname: comment.authorNick
+                    }
+                })
+
+                return [
+                    comment,
+                    user]
+
             }
         } catch (error) {
             this.logger.error(error)
@@ -56,7 +74,7 @@ export class PostsAtributesService {
                     postId,
                 },
             });
-            
+
             const commentsWithUsers = await Promise.all(comments.map(async (comment) => {
                 const user = await this.prismaService.user.findUnique({
                     where: {
@@ -65,13 +83,13 @@ export class PostsAtributesService {
                 });
                 return {
                     ...comment,
-                    user, 
+                    user,
                 };
             }));
-            
+
             return commentsWithUsers;
         } catch (error) {
-            this.logger.error("erro ao recuperar comentarios. Mais detalhes:\n" ,error, "\n")
+            this.logger.error("erro ao recuperar comentarios. Mais detalhes:\n", error, "\n")
         }
     }
 
@@ -112,7 +130,7 @@ export class PostsAtributesService {
     }
 
     async UpdatePostLiked(data: LikedsPostsDto, type: string) {
-
+        console.log(data)
         switch (type) {
             case "like":
 

@@ -15,7 +15,7 @@ Table users {
   nickname String [unique, not null]
   bio String [not null, default: '']
   skills String [not null, default: '']
-  profilePic String [not null, default: '']
+  profilePic String [not null, default: 'http://localhost:3000/default.avif']
   recentsPosts String [not null, default: '']
   PrivateMessages PrivateMessages [not null]
   messages messages [not null]

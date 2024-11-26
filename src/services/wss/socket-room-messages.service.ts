@@ -6,29 +6,29 @@ import { PrivateMessagesDTO } from "src/socket/dto/wss/socket-private-messages.d
 
 @Injectable()
 export class SocketMessageService {
-    constructor(readonly prismaService: PrismaService) {}
+    constructor(readonly prismaService: PrismaService) { }
     private logger: Logger = new Logger('AppGateway');
-    async saveMessage(data: MessageDto[]) {
+    async saveMessages(data: MessageDto[]) {
         console.time("start")
         this.logger.log("starting messages save")
-        for(let message of data) {
+        for (let message of data) {
             const checker = await this.prismaService.messages.findMany({
                 where: {
-                    author:     message.author,
-                    content:    message.content,
-                    room:       message.room,
-                    hour:       message.hour
+                    author: message.author,
+                    content: message.content,
+                    room: message.room,
+                    hour: message.hour
                 }
             })
 
-            if(checker.length == 0) continue;
+            if (checker.length == 0) continue;
 
             await this.prismaService.messages.create({
                 data: {
-                    author:     message.author,
-                    content:    message.content,
-                    room:       message.room,
-                    hour:       message.hour
+                    author: message.author,
+                    content: message.content,
+                    room: message.room,
+                    hour: message.hour
                 }
             })
         }
@@ -36,13 +36,39 @@ export class SocketMessageService {
         this.logger.log("finishing messages save")
     }
 
-    
+    async saveMessage(data: MessageDto) {
+        console.time("start")
+        this.logger.log("starting messages save")
+
+        const checker = await this.prismaService.messages.findMany({
+            where: {
+                author: data.author,
+                content: data.content,
+                room: data.room,
+                hour: data.hour
+            }
+        })
+
+        if (checker.length !== 0) return;
+
+        await this.prismaService.messages.create({
+            data: {
+                author: data.author,
+                content: data.content,
+                room: data.room,
+                hour: data.hour
+            }
+        })
+    }
+
+
+
     async savePrivateMessage(data: PrivateMessagesDTO) {
         const message = await this.prismaService.privateMessages.create({
             data: {
-                author:     data.author,
-                content:    data.content,
-                to:         data.to
+                author: data.author,
+                content: data.content,
+                to: data.to
             }
         })
 
@@ -56,7 +82,7 @@ export class SocketMessageService {
             }
         });
 
-        return messages; 
+        return messages;
     }
 
     async deleteMessage(data: MessageDto) {
@@ -64,7 +90,7 @@ export class SocketMessageService {
             where: {
                 id: data.id
             }
-        }) 
+        })
         return message
     }
 }

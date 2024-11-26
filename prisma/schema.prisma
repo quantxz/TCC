@@ -27,7 +27,7 @@ model User {
 
   bio        String @default("")
   skills     String @default("")
-  profilePic String @default("")
+  profilePic String @default("http://localhost:3000/default.avif")
 
   recentsPosts  String @default("")
 

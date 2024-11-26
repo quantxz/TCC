@@ -22,7 +22,6 @@ export class PostsAtributes {
       if (file) {
         const result = await this.uploadsService.filePipe<string>(file, "Comment");
         const commentImageUrl = `${"http://localhost:3000/" + result}`;
-        console.log(commentImageUrl)
 
         const data: CommentDto = {
           content:  commentDto.content,
@@ -30,9 +29,8 @@ export class PostsAtributes {
           authorNick: commentDto.authorNick,  
           postId: commentDto.postId
         }
-
         const comment = await this.postsAtributesService.doComment(data);
-
+        
         return comment;
       } else {
         const comment = await this.postsAtributesService.doComment(commentDto);

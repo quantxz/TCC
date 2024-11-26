@@ -17,7 +17,13 @@ export class PostsService {
         }
       })
 
-      return post
+      const user = await this.prismaService.user.findUnique({
+        where: {
+          nickname: postDto.userNickname
+        }
+      })
+
+      return [post, user]
     } catch (error) {
       this.logger.error(error)
     }

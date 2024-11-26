@@ -23,32 +23,19 @@ export class SocketGateway implements OnGatewayInit, OnGatewayConnection, OnGate
   constructor(
     private prismaService: PrismaService,
     private messageJobService: insertMessageProducerService,
-    private messagesService: SocketMessageService 
+    private messagesService: SocketMessageService
   ) {
-    this.saveMessage(this.messages);
   }
 
   @SubscribeMessage('find_messages')
   async findMessages(client: Socket, roomName: string): Promise<void> {
     const messages = await this.messagesService.findMessages(roomName);
-  
+
     this.server.to(roomName).emit('all_messages', messages);
   }
-  
-  async saveMessage(data: MessageDto[]) {
-    setInterval(async () => {
-      await this.messagesService.saveMessage(data)
-      this.saveMessage(this.messages)
-      this.messages = []
-    }, 600000)
 
-  }
 
-  @SubscribeMessage('save messages queue')
-  async putMessagesInSaveQueue(client: Socket, data: MessageDto): Promise<void> {
-    this.messages.push(data);
-  }
- 
+
   @SubscribeMessage("select room")
   async selectRoom(roomName: string, client: Socket) {
     let room = await this.prismaService.chatRoom.findUnique({
@@ -80,16 +67,8 @@ export class SocketGateway implements OnGatewayInit, OnGatewayConnection, OnGate
       hour: data.hour
     })
 
-  }
+    await this.messagesService.saveMessage(data)
 
-  @SubscribeMessage('private message')
-  async handlePrivateMessage(client: Socket, data: PrivateMessagesDTO): Promise<void> {
-    this.server.to(data.to).emit("private message", {
-      content: data.content,
-      from: client.id
-    })
-
-    await this.messageJobService.insertPrivateMessage(data)
   }
 
   //depois que a conexão websocket é iniciada
