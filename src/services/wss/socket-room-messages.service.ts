@@ -9,8 +9,6 @@ export class SocketMessageService {
     constructor(readonly prismaService: PrismaService) { }
     private logger: Logger = new Logger('AppGateway');
     async saveMessages(data: MessageDto[]) {
-        console.time("start")
-        this.logger.log("starting messages save")
         for (let message of data) {
             const checker = await this.prismaService.messages.findMany({
                 where: {
@@ -32,14 +30,9 @@ export class SocketMessageService {
                 }
             })
         }
-        console.timeEnd("start")
-        this.logger.log("finishing messages save")
     }
 
     async saveMessage(data: MessageDto) {
-        console.time("start")
-        this.logger.log("starting messages save")
-
         const checker = await this.prismaService.messages.findMany({
             where: {
                 author: data.author,
